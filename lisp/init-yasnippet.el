@@ -1,5 +1,8 @@
 ;; code snippet
-(require 'yasnippet)
-(yas-global-mode 1)
+(use-package yasnippet
+  :ensure t
+  :config (progn
+	    (require 'yasnippet)
+	    (yas-global-mode 1)))
 
 (provide 'init-yasnippet)
