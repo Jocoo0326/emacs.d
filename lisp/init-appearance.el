@@ -10,8 +10,8 @@
   :config (load-theme 'material t))
 
 ;; set default font
-;; (set-default-font "YaHei Consolas Hybrid-13")
-(set-default-font "Monaco-13")
+(set-default-font "YaHei Consolas Hybrid-13")
+;; (set-default-font "Monaco-13")
 
 ;; show line number
 (global-linum-mode t)

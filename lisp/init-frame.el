@@ -1,6 +1,5 @@
 ;; set startup frame size
-(add-hook 'after-init-hook
-	  '(lambda ()
-	     (when window-system (set-frame-size (selected-frame) 140 35))))
+(setq initial-frame-alist
+		 '((top . 0) (left . 0) (width . 100) (height . 35)))
 
 (provide 'init-frame)
