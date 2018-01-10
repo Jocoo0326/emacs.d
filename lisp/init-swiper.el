@@ -1,4 +1,6 @@
 ;; swiper search
-(global-set-key (kbd "C-s") 'swiper)
+(use-package swiper
+  :ensure t
+  :config (global-set-key (kbd "C-s") 'swiper))
 
 (provide 'init-swiper)

@@ -5,9 +5,9 @@
 (scroll-bar-mode -1)
 
 ;; set color theme
-(use-package material-theme
+(use-package solarized-theme 
   :ensure t
-  :config (load-theme 'material t))
+  :config (load-theme 'solarized-light t))
 
 ;; set default font
 (set-default-font "YaHei Consolas Hybrid-13")

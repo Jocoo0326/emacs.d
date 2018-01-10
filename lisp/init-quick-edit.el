@@ -15,6 +15,8 @@
   (indent-for-tab-command))
 (global-set-key (kbd "C-o") 'my/insert-new-line-below-current)
 
+(global-set-key (kbd "C-]") 'ffap)
+
 ;; enable paren mode
 (show-paren-mode)
 (electric-pair-mode)
