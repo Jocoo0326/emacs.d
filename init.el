@@ -24,3 +24,5 @@
 (require 'init-swiper)
 
 (require 'init-frame)
+
+(require 'init-help)

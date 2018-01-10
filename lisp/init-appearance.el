@@ -10,8 +10,9 @@
   :config (load-theme 'solarized-light t))
 
 ;; set default font
-(set-default-font "YaHei Consolas Hybrid-13")
-;; (set-default-font "Monaco-13")
+(if (eq system-type "darwin")
+    (set-default-font "YaHei Consolas Hybrid-13")
+(set-default-font "Monaco-13"))
 
 ;; show line number
 (global-linum-mode t)
