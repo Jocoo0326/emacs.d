@@ -1,11 +1,11 @@
 ;; insert new line above current line
-(defun my/insert_new_line_before_current (times)
+(defun my/insert-new-line-before-current (times)
   (interactive "p")
   (move-beginning-of-line 1)
   (newline times)
   (previous-line times)
   (indent-for-tab-command))
-(global-set-key (kbd "C-S-o") 'my/insert_new_line_before_current)
+(global-set-key (kbd "C-S-o") 'my/insert-new-line-before-current)
 
 ;; insert new line below current line
 (defun my/insert-new-line-below-current (times)
