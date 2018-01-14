@@ -15,6 +15,13 @@
   (indent-for-tab-command))
 (global-set-key (kbd "C-o") 'my/insert-new-line-below-current)
 
+;; delete word under cursor
+(defun my/delete-word-under-cursor ()
+  (interactive)
+  (backward-word)
+  (kill-word 1))
+(global-set-key (kbd "C-c c i w") 'my/delete-word-under-cursor)
+
 (global-set-key (kbd "C-]") 'ffap)
 
 ;; enable paren mode

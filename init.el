@@ -26,3 +26,5 @@
 (require 'init-frame)
 
 (require 'init-help)
+
+(require 'init-paredit)
