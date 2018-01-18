@@ -9,8 +9,11 @@
   :ensure t
   :config
   (progn 
-    (load-theme 'solarized-light t)
-    (set-face-attribute 'region nil :background "#FFF" :foreground "#93A1A1")))
+    (load-theme 'solarized-light t)))
+
+;; set region face in windows
+(when (string-equal system-type "windows-nt")
+  (set-face-attribute 'region nil :background "#FFF" :foreground "#93A1A1"))
 
 ;; set default font
 (cond ((string-equal system-type "darwin")
