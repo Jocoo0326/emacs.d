@@ -7,7 +7,10 @@
 ;; set color theme
 (use-package solarized-theme 
   :ensure t
-  :config (load-theme 'solarized-light t))
+  :config
+  (progn 
+    (load-theme 'solarized-light t)
+    (set-face-attribute 'region nil :background "#FFF" :foreground "#93A1A1")))
 
 ;; set default font
 (cond ((string-equal system-type "darwin")

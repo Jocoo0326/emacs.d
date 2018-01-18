@@ -28,3 +28,9 @@
 (require 'init-help)
 
 (require 'init-paredit)
+
+(require 'init-multiple-cursors)
+
+(require 'init-translate-plugin)
+
+(require 'init-expand-region)

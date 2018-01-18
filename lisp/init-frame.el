@@ -1,5 +1,8 @@
 ;; set startup frame size
-(setq initial-frame-alist
-		 '((top . 0) (left . 0) (width . 100) (height . 32)))
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+;; split window horizontally
+(setq split-height-threshold nil)
+(setq split-width-threshold 0)
 
 (provide 'init-frame)
