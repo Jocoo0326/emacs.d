@@ -11,7 +11,7 @@
 
 (require 'init-restclient)
 
-;; (require 'init-evil)
+(require 'init-evil)
 
 (require 'init-company)
 
@@ -34,3 +34,5 @@
 (require 'init-translate-plugin)
 
 (require 'init-expand-region)
+
+(require 'init-ace-jump)
