@@ -23,7 +23,7 @@
 (global-set-key (kbd "C-c c i w") 'my/delete-word-under-cursor)
 
 ;; copy word
-(defun copy-word (arg)
+(defun my/copy-word (arg)
   (interactive "p")
   (let ((count (or arg 1)) (beg) (end))
     (if (= count 1)
@@ -37,10 +37,10 @@
     (copy-region-as-kill beg end)
     (message "word%s copied." (if (> count 1) "s" ""))))
 
-(global-set-key (kbd "C-c w") 'copy-word)
+(global-set-key (kbd "C-c w") 'my/copy-word)
 
 ;; copy line
-(defun copy-line (arg)
+(defun my/copy-line (arg)
   (interactive "p")
   (let ((beg (line-beginning-position))
 	(end (line-end-position arg)))
@@ -48,16 +48,19 @@
       (if (> (point) (mark))
 	  (setq beg (save-excursion (goto-char (mark)) (line-beginning-position)))
 	(setq end (save-excursion (goto-char (mark)) (line-end-position)))))
-    (if (eq last-command 'copy-line)
+    (if (eq last-command 'my/copy-line)
 	(kill-append (buffer-substring beg end) (< end beg))
       (kill-ring-save beg end)))
   (kill-append "\n" nil)
   (beginning-of-line (or (and arg (1+ arg)) 2))
   (if (and arg (not (= 1 arg))) (message "%d lines copied" arg)))
-(global-set-key (kbd "C-c l") 'copy-line)
+(global-set-key (kbd "C-c l") 'my/copy-line)
 
 ;; find file at position
 (global-set-key (kbd "C-]") 'ffap)
+
+;; delete region when typing
+(pending-delete-mode t)
 
 ;; enable paren mode
 (show-paren-mode)
