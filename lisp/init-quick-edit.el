@@ -1,60 +1,76 @@
 ;; insert new line above current line
-(defun my/insert-new-line-before-current (times)
+(defun jocoo/insert-new-line-before-current (times)
   (interactive "p")
   (move-beginning-of-line 1)
   (newline times)
   (previous-line times)
   (indent-for-tab-command))
-(global-set-key (kbd "C-S-o") 'my/insert-new-line-before-current)
+(global-set-key (kbd "C-S-o") 'jocoo/insert-new-line-before-current)
 
 ;; insert new line below current line
-(defun my/insert-new-line-below-current (times)
+(defun jocoo/insert-new-line-below-current (times)
   (interactive "P")
   (move-end-of-line 1)
   (newline times)
   (indent-for-tab-command))
-(global-set-key (kbd "C-o") 'my/insert-new-line-below-current)
+(global-set-key (kbd "C-o") 'jocoo/insert-new-line-below-current)
 
-;; delete word under cursor
-(defun my/delete-word-under-cursor ()
-  (interactive)
-  (backward-word)
-  (kill-word 1))
-(global-set-key (kbd "C-c c i w") 'my/delete-word-under-cursor)
+;;------------------------------------------------------------------------------------------
+;; copy/delete chars words lines paragraphs
+;;------------------------------------------------------------------------------------------
 
-;; copy word
-(defun my/copy-word (arg)
-  (interactive "p")
-  (let ((count (or arg 1)) (beg) (end))
-    (if (= count 1)
-	(let ((bnd (bounds-of-thing-at-point 'word)))
-	  (setq beg (car bnd)
-		end (cdr bnd)))
-      (save-excursion
-	(setq beg (point))
-	(forward-word count)
-	(setq end (point))))
-    (copy-region-as-kill beg end)
-    (message "word%s copied." (if (> count 1) "s" ""))))
+;; operate region macro
+(defmacro jocoo/region-operate (op-name unit op)
+  `(defun ,(intern (concat "jocoo/" op-name "-" unit "-under")) (arg)
+     (interactive "p")
+     (let ((count (or arg 1)) (beg) (end) (bound))
+       (setq bound (bounds-of-thing-at-point (quote ,(intern unit))))
+       (setq beg (car bound))
+       (save-excursion
+	 (goto-char beg)
+	 (,(intern (concat "forward-" unit)) count)
+	 (setq end (point)))
+       (,op beg end)
+       (message ,(concat op-name " " unit "%s") (if (> count 1) "s" "")))))
 
-(global-set-key (kbd "C-c w") 'my/copy-word)
+;; char operation
+(jocoo/region-operate "copy" "char" copy-region-as-kill)
+(jocoo/region-operate "delete" "char" kill-region)
+(global-set-key (kbd "C-c c c") 'jocoo/copy-char-under)
+(global-set-key (kbd "C-c d c") 'jocoo/delete-char-under)
 
-;; copy line
-(defun my/copy-line (arg)
-  (interactive "p")
-  (let ((beg (line-beginning-position))
-	(end (line-end-position arg)))
-    (when mark-active
-      (if (> (point) (mark))
-	  (setq beg (save-excursion (goto-char (mark)) (line-beginning-position)))
-	(setq end (save-excursion (goto-char (mark)) (line-end-position)))))
-    (if (eq last-command 'my/copy-line)
-	(kill-append (buffer-substring beg end) (< end beg))
-      (kill-ring-save beg end)))
-  (kill-append "\n" nil)
-  (beginning-of-line (or (and arg (1+ arg)) 2))
-  (if (and arg (not (= 1 arg))) (message "%d lines copied" arg)))
-(global-set-key (kbd "C-c l") 'my/copy-line)
+;; word operation
+(jocoo/region-operate "copy" "word" copy-region-as-kill)
+(jocoo/region-operate "delete" "word" kill-region)
+(global-set-key (kbd "C-c c w") 'jocoo/copy-word-under)
+(global-set-key (kbd "C-c d w") 'jocoo/delete-word-under)
+
+;; line operation
+(jocoo/region-operate "copy" "paragraph" copy-region-as-kill)
+(jocoo/region-operate "delete" "paragraph" kill-region)
+(global-set-key (kbd "C-c c p") 'jocoo/copy-paragraph-under)
+(global-set-key (kbd "C-c d p") 'jocoo/delete-paragraph-under)
+
+;; paragraph operation
+(jocoo/region-operate "copy" "paragraph" copy-region-as-kill)
+(jocoo/region-operate "delete" "paragraph" kill-region)
+(global-set-key (kbd "C-c c p") 'jocoo/copy-paragraph-under)
+(global-set-key (kbd "C-c d p") 'jocoo/delete-paragraph-under)
+(global-set-key (kbd "C-c v p") 'mark-paragraph)
+
+;;------------------------------------------------------------------------------------------
+;; zap [up] to char operations
+;;------------------------------------------------------------------------------------------
+
+(global-set-key (kbd "C-c z c") 'zap-to-char)
+(defun jocoo/zap-up-to-char (args char)
+  (interactive "p\ncZap up to char:")
+  (zap-to-char args char)
+  (insert char)
+  (forward-char -1))
+(global-set-key (kbd "C-c z u") 'jocoo/zap-up-to-char)
+
+;;------------------------------------------------------------------------------------------
 
 ;; find file at position
 (global-set-key (kbd "C-]") 'ffap)
