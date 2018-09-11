@@ -9,7 +9,7 @@
   :ensure t
   :config
   (progn 
-    (load-theme 'solarized-light t)))
+    (load-theme 'solarized-dark t)))
 
 ;; set region face in windows
 (when (string-equal system-type "windows-nt")

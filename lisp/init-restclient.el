@@ -204,6 +204,9 @@
 
     (restclient-restore-header-variables)
 
+    (and (null (assoc-string "Content-Type" headers))
+	 (string-equal "POST" url-request-method)
+	 (push '("Content-Type" . "application/x-www-form-urlencoded") headers))
     (dolist (header headers)
       (let* ((mapped (assoc-string (downcase (car header))
                                    '(("from" . url-personal-mail-address)
