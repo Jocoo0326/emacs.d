@@ -27,8 +27,6 @@
 
 (require 'init-help)
 
-(require 'init-paredit)
-
 (require 'init-multiple-cursors)
 
 (require 'init-translate-plugin)
@@ -38,3 +36,5 @@
 (require 'init-ace-jump)
 
 (require 'init-cnfonts)
+
+(require 'init-helm-configuration)

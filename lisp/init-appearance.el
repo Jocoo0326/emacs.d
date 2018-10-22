@@ -5,11 +5,10 @@
 (scroll-bar-mode -1)
 
 ;; set color theme
-(use-package solarized-theme 
+(use-package spacemacs-theme 
   :ensure t
-  :config
-  (progn 
-    (load-theme 'solarized-dark t)))
+  :defer t
+  :init (load-theme 'spacemacs-dark t))
 
 ;; set region face in windows
 (when (string-equal system-type "windows-nt")
@@ -20,9 +19,14 @@
        (set-default-font "Monaco-13"))
       ((or (string-equal system-type "gnu/linux")
 	   (string-equal system-type "windows-nt"))
-       (set-default-font "YaHei Consolas Hybrid-14")))
+       (set-default-font "Source Code Pro-14")))
 
 ;; show line number
 (global-linum-mode t)
+
+(use-package nyan-mode
+  :ensure t
+  :config
+  (nyan-mode 1))
 
 (provide 'init-appearance)

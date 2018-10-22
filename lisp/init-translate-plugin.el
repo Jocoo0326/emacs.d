@@ -60,7 +60,7 @@
 
 (defun parse-translate-response (buffer-string)
   (let ((json-object-type 'alist))
-    (mapconcat '(lambda (arg)
+    (mapconcat #'(lambda (arg)
 		  (cdr (assoc 'dst arg)))
 	       (cdr
 		(assoc 'trans_result
