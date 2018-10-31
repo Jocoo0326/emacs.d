@@ -29,4 +29,10 @@
   :config
   (nyan-mode 1))
 
+(use-package spaceline
+  :ensure t
+  :config
+  (require 'spaceline-config)
+  (spaceline-spacemacs-theme))
+
 (provide 'init-appearance)
