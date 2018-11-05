@@ -1,1 +1,0 @@
-("~/.emacs.d/" "c:/Users/ThinkPad/Configs/")

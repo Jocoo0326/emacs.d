@@ -42,6 +42,8 @@
 (require 'init-projectile)
 
 (require 'init-magit)
+
+(require 'init-ggtags)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -50,7 +52,7 @@
  '(package-check-signature nil)
  '(package-selected-packages
    (quote
-    (magit async bind-key dash epl helm-core ivy pkg-info popup s powerline projectile helm-projectile spaceline helm cnfonts ace-jump-mode expand-region multiple-cursors swiper yasnippet-snippets yasnippet nyan-mode spacemacs-theme company evil which-key try use-package))))
+    (ggtags helm-gtags undo-tree magit async bind-key dash epl helm-core ivy pkg-info popup s powerline projectile helm-projectile spaceline helm cnfonts ace-jump-mode expand-region multiple-cursors swiper yasnippet-snippets yasnippet nyan-mode spacemacs-theme company evil which-key try use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
