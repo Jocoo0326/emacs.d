@@ -46,10 +46,10 @@
 (global-set-key (kbd "C-c d w") 'jocoo/delete-word-under)
 
 ;; line operation
-(jocoo/region-operate "copy" "paragraph" copy-region-as-kill)
-(jocoo/region-operate "delete" "paragraph" kill-region)
-(global-set-key (kbd "C-c c p") 'jocoo/copy-paragraph-under)
-(global-set-key (kbd "C-c d p") 'jocoo/delete-paragraph-under)
+(jocoo/region-operate "copy" "line" copy-region-as-kill)
+(jocoo/region-operate "delete" "line" kill-region)
+(global-set-key (kbd "C-c c l") 'jocoo/copy-line-under)
+(global-set-key (kbd "C-c d l") 'jocoo/delete-line-under)
 
 ;; paragraph operation
 (jocoo/region-operate "copy" "paragraph" copy-region-as-kill)
@@ -71,6 +71,19 @@
 (global-set-key (kbd "C-c z u") 'jocoo/zap-up-to-char)
 
 ;;------------------------------------------------------------------------------------------
+
+;;------------------------------------------------------------------------------------------
+;; Replacing the preceding sexp with its value.
+;;------------------------------------------------------------------------------------------
+(defun eval-and-replace ()
+  (interactive)
+  (backward-kill-sexp)
+  (condition-case nil
+      (prin1 (eval (read (current-kill 0)))
+	     (current-buffer))
+    (error (message "Invalid expression")
+	   (insert (current-kill 0)))))
+(global-set-key (kbd "C-c C-e") 'eval-and-replace)
 
 ;; find file at position
 (global-set-key (kbd "C-]") 'ffap)

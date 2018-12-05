@@ -24,15 +24,15 @@
 ;; show line number
 (global-linum-mode t)
 
-(use-package nyan-mode
-  :ensure t
-  :config
-  (nyan-mode 1))
+;; (use-package nyan-mode
+;;   :ensure t
+;;   :config
+;;   (nyan-mode 1))
 
-(use-package spaceline
-  :ensure t
-  :config
-  (require 'spaceline-config)
-  (spaceline-spacemacs-theme))
+;; (use-package spaceline
+;;   :ensure t
+;;   :config
+;;   (require 'spaceline-config)
+;;   (spaceline-spacemacs-theme))
 
 (provide 'init-appearance)
