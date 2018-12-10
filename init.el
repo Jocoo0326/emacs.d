@@ -13,36 +13,3 @@
   (package-install 'use-package))
 
 (org-babel-load-file (concat user-emacs-directory "config.org"))
-
-
-;; ;; (require 'init-evil)
-
-;; (require 'init-company)
-
-;; (require 'init-appearance)
-
-;; (require 'init-quick-edit)
-
-;; (require 'init-frame)
-
-;; (require 'init-help)
-
-;; (require 'init-multiple-cursors)
-
-;; (require 'init-translate-plugin)
-
-;; (require 'init-expand-region)
-
-;; (require 'init-ace-jump)
-
-;; (require 'init-cnfonts)
-
-;; (require 'init-helm-configuration)
-
-;; (require 'init-projectile)
-
-;; (require 'init-magit)
-
-;; (require 'init-ggtags)
-
-;; (require 'init-neotree)
