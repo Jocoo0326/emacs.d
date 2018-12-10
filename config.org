@@ -1,0 +1,301 @@
+* global
+** Config load path
+#+begin_src emacs-lisp
+  (add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
+#+end_src
+
+* Quick editting
+** avy
+#+begin_src emacs-lisp
+  (use-package avy
+    :ensure t
+    :config
+    (global-set-key (kbd "C-c j") 'avy-goto-char)
+    (global-set-key (kbd "C-c g") 'avy-goto-word-or-subword-1))
+#+end_src
+
+** multiple cursors
+#+begin_src emacs-lisp
+  (use-package multiple-cursors
+    :ensure t)
+
+  (require 'multiple-cursors)
+
+  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+#+end_src
+
+** expand region
+#+begin_src emacs-lisp
+  (use-package expand-region
+    :ensure t
+    :bind (("C-=" . er/expand-region)))
+#+end_src
+
+#+RESULTS:
+: er/expand-region
+
+** insert new line above current line
+#+begin_src emacs-lisp
+  (defun jocoo/insert-new-line-before-current (times)
+    (interactive "p")
+    (move-beginning-of-line 1)
+    (newline times)
+    (previous-line times)
+    (indent-for-tab-command))
+  (global-set-key (kbd "C-S-o") 'jocoo/insert-new-line-before-current)
+#+end_src
+
+** insert new line below current line
+#+begin_src emacs-lisp
+  (defun jocoo/insert-new-line-below-current (times)
+    (interactive "P")
+    (move-end-of-line 1)
+    (newline times)
+    (indent-for-tab-command))
+  (global-set-key (kbd "C-o") 'jocoo/insert-new-line-below-current)
+#+end_src
+
+** copy/delete chars words lines paragraphs
+#+begin_src emacs-lisp
+  ;; operate region macro
+  (defmacro jocoo/region-operate (op-name unit op)
+    `(defun ,(intern (concat "jocoo/" op-name "-" unit "-under")) (arg)
+       (interactive "p")
+       (let ((count (or arg 1)) (beg) (end) (bound))
+         (setq bound (bounds-of-thing-at-point (quote ,(intern unit))))
+         (setq beg (car bound))
+         (save-excursion
+           (goto-char beg)
+           (,(intern (concat "forward-" unit)) count)
+           (setq end (point)))
+         (,op beg end)
+         (message ,(concat op-name " " unit "%s") (if (> count 1) "s" "")))))
+
+  ;; char operation
+  (jocoo/region-operate "copy" "char" copy-region-as-kill)
+  (jocoo/region-operate "delete" "char" kill-region)
+  (global-set-key (kbd "C-c c c") 'jocoo/copy-char-under)
+  (global-set-key (kbd "C-c d c") 'jocoo/delete-char-under)
+
+  ;; word operation
+  (jocoo/region-operate "copy" "word" copy-region-as-kill)
+  (jocoo/region-operate "delete" "word" kill-region)
+  (global-set-key (kbd "C-c c w") 'jocoo/copy-word-under)
+  (global-set-key (kbd "C-c d w") 'jocoo/delete-word-under)
+
+  ;; line operation
+  (jocoo/region-operate "copy" "line" copy-region-as-kill)
+  (jocoo/region-operate "delete" "line" kill-region)
+  (global-set-key (kbd "C-c c l") 'jocoo/copy-line-under)
+  (global-set-key (kbd "C-c d l") 'jocoo/delete-line-under)
+
+  ;; paragraph operation
+  (jocoo/region-operate "copy" "paragraph" copy-region-as-kill)
+  (jocoo/region-operate "delete" "paragraph" kill-region)
+  (global-set-key (kbd "C-c c p") 'jocoo/copy-paragraph-under)
+  (global-set-key (kbd "C-c d p") 'jocoo/delete-paragraph-under)
+  (global-set-key (kbd "C-c v p") 'mark-paragraph)
+#+end_src
+
+** zap [up] to char operations
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-c z c") 'zap-to-char)
+  (defun jocoo/zap-up-to-char (args char)
+    (interactive "p\\ncZap up to char:")
+    (zap-to-char args char)
+    (insert char)
+    (forward-char -1))
+  (global-set-key (kbd "C-c z u") 'jocoo/zap-up-to-char)
+#+end_src
+
+** Replacing the preceding sexp with its value.
+#+begin_src emacs-lisp
+  (defun eval-and-replace ()
+    (interactive)
+    (backward-kill-sexp)
+    (condition-case nil
+        (prin1 (eval (read (current-kill 0)))
+               (current-buffer))
+      (error (message "Invalid expression")
+             (insert (current-kill 0)))))
+  (global-set-key (kbd "C-c C-e") 'eval-and-replace)
+#+end_src
+
+** find file at position
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-]") 'ffap)
+#+end_src
+
+** delete region when typing
+#+begin_src emacs-lisp
+  (pending-delete-mode t)
+#+end_src
+
+** enable paren mode
+#+begin_src emacs-lisp
+  (show-paren-mode)
+  (electric-pair-mode)
+#+end_src
+
+* Restclient
+#+begin_src emacs-lisp
+  (require 'restclient)
+#+end_src
+
+* appearance
+** disable startup page and all bars
+#+begin_src emacs-lisp
+  (setq inhibit-startup-message t)
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (scroll-bar-mode -1)
+#+end_src
+
+** set color theme
+#+begin_src emacs-lisp
+  (use-package spacemacs-theme 
+    :ensure t
+    :defer t
+    :init (load-theme 'spacemacs-dark t))
+#+end_src
+
+** set region face in windows
+#+begin_src emacs-lisp
+  (when (string-equal system-type "windows-nt")
+    (set-face-attribute 'region nil :background "#FFF" :foreground "#93A1A1"))
+#+end_src
+
+** set default font
+#+begin_src emacs-lisp
+  (cond ((string-equal system-type "darwin")
+         (set-default-font "Monaco-13"))
+        ((or (string-equal system-type "gnu/linux")
+             (string-equal system-type "windows-nt"))
+         (set-default-font "Source Code Pro-14")))
+#+end_src
+
+** show line number
+#+begin_src emacs-lisp
+  (global-linum-mode t)
+#+end_src
+** set startup frame size 
+#+begin_src emacs-lisp
+  (add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+  ;; split window horizontally
+  (setq split-height-threshold nil)
+  (setq split-width-threshold 0)
+#+end_src
+
+* auto complete
+** yasnippet
+#+begin_src emacs-lisp
+  (use-package yasnippet-snippets
+    :ensure t)
+
+  (use-package yasnippet
+    :ensure t
+    :config
+    (yas-global-mode 1))
+#+end_src
+
+** company
+#+begin_src emacs-lisp
+  (use-package company
+    :ensure t)
+
+  (add-hook 'after-init-hook 'global-company-mode)
+#+end_src
+
+* project
+** files tree
+#+begin_src emacs-lisp
+  (use-package neotree
+    :ensure t
+    :config
+    (global-set-key [f8] 'neotree-toggle))
+#+end_src
+
+** helm ggtags
+#+begin_src emacs-lisp
+  (use-package helm
+    :ensure t)
+
+  (require 'helm-config)
+
+  (global-set-key (kbd "M-x") #'helm-M-x)
+  (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+  (global-set-key (kbd "C-x C-f") #'helm-find-files)
+
+  (helm-mode 1)
+
+  (use-package ggtags
+    :ensure t)
+
+  (use-package helm-gtags
+    :ensure t
+    :config
+    ;;; Enable helm-gtags-mode
+    (add-hook 'c-mode-hook 'helm-gtags-mode)
+    (add-hook 'c++-mode-hook 'helm-gtags-mode)
+    (add-hook 'java-mode-hook 'helm-gtags-mode)
+
+    ;; customize
+    (custom-set-variables
+     '(helm-gtags-path-style 'relative)
+     '(helm-gtags-ignore-case t)
+     '(helm-gtags-auto-update t))
+
+    ;; key bindings
+    (with-eval-after-load 'helm-gtags
+      (define-key helm-gtags-mode-map (kbd "M-]") 'helm-gtags-find-tag-from-here)
+      (define-key helm-gtags-mode-map (kbd "M-t") 'helm-gtags-find-tag)
+      (define-key helm-gtags-mode-map (kbd "M-r") 'helm-gtags-find-rtag)
+      (define-key helm-gtags-mode-map (kbd "M-s") 'helm-gtags-find-symbol)
+      (define-key helm-gtags-mode-map (kbd "M-g M-p") 'helm-gtags-parse-file)
+      (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+      (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+      (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)))
+#+end_src
+** projectile
+#+begin_src emacs-lisp
+  (use-package projectile
+    :ensure t
+    :config
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+    (projectile-mode +1))
+
+  (use-package helm-projectile
+    :ensure t
+    :config
+    (require 'helm-projectile)
+    (helm-projectile-on))
+#+end_src
+
+** magit
+#+begin_src emacs-lisp
+  (use-package magit
+    :ensure t)
+#+end_src
+
+* utils
+#+begin_src emacs-lisp
+  (defun show-last-command ()
+    "Print the command name latest executed."
+    (interactive)
+    (eval-expression 'last-command))
+  (global-set-key (kbd "C-c C-l") 'show-last-command)
+
+  ;; Putting all files in one directory
+  (setq backup-directory-alist
+        `((".*" . ,temporary-file-directory)))
+  (setq auto-save-file-name-transforms
+        `((".*" ,temporary-file-directory t)))
+#+end_src
+
+** translate
+#+begin_src emacs-lisp
+  (require 'translate)
+#+end_src

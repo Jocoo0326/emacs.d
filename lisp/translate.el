@@ -69,4 +69,4 @@
 
 (global-set-key (kbd "C-c C-t") 'jocoo/translate-word-or-region)
 
-(provide 'init-translate-plugin)
+(provide 'translate)

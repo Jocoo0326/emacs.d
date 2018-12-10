@@ -3,46 +3,46 @@
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
 ;; (package-initialize)
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
+(require 'package)
+(setq package-archives '(("gnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+			 ("melpa" . "http://mirros.tuna.tsinghua.edu.cn/elpa/melpa/")))
+(package-initialize)
 
-(require 'init-package)
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
 
-(require 'init-use-package)
+(org-babel-load-file (concat user-emacs-directory "config.org"))
 
-(require 'init-restclient)
 
-;; (require 'init-evil)
+;; ;; (require 'init-evil)
 
-(require 'init-company)
+;; (require 'init-company)
 
-(require 'init-appearance)
+;; (require 'init-appearance)
 
-(require 'init-quick-edit)
+;; (require 'init-quick-edit)
 
-(require 'init-yasnippet)
+;; (require 'init-frame)
 
-(require 'init-swiper)
+;; (require 'init-help)
 
-(require 'init-frame)
+;; (require 'init-multiple-cursors)
 
-(require 'init-help)
+;; (require 'init-translate-plugin)
 
-(require 'init-multiple-cursors)
+;; (require 'init-expand-region)
 
-(require 'init-translate-plugin)
+;; (require 'init-ace-jump)
 
-(require 'init-expand-region)
+;; (require 'init-cnfonts)
 
-(require 'init-ace-jump)
+;; (require 'init-helm-configuration)
 
-(require 'init-cnfonts)
+;; (require 'init-projectile)
 
-(require 'init-helm-configuration)
+;; (require 'init-magit)
 
-(require 'init-projectile)
+;; (require 'init-ggtags)
 
-(require 'init-magit)
-
-(require 'init-ggtags)
-
-(require 'init-neotree)
+;; (require 'init-neotree)

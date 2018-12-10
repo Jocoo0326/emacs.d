@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: insert-code-block
+# key: s
+# --
+#+begin_src ${1:emacs-lisp}
+$2
+#+end_src
+$0
