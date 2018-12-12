@@ -173,8 +173,10 @@
          (set-default-font "Monaco-13"))
         ((or (string-equal system-type "gnu/linux")
              (string-equal system-type "windows-nt"))
-         (set-default-font "Source Code Pro-14")))
+         (set-default-font "Fira Code-12")))
 #+end_src
+
+#+RESULTS:
 
 ** show line number
 #+begin_src emacs-lisp
