@@ -4,9 +4,9 @@
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("config.org"
  (filename . "~/.emacs.d/config.org")
- (front-context-string . "\n\n** multiple cu")
- (rear-context-string . "rd-1))\n#+end_src")
- (position . 343))
+ (front-context-string . "* global\n** Conf")
+ (rear-context-string)
+ (position . 1))
 ("init.el"
  (filename . "~/.emacs.d/init.el")
  (front-context-string . "(add-to-list 'lo")
