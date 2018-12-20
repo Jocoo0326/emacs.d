@@ -3,6 +3,10 @@
 #+begin_src emacs-lisp
   (add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
 #+end_src
+** replace tabs with spaces
+#+begin_src emacs-lisp
+  (setq-default indent-tabs-mode nil)
+#+end_src
 
 * Quick editting
 ** avy
@@ -57,6 +61,67 @@
   (global-set-key (kbd "C-o") 'jocoo/insert-new-line-below-current)
 #+end_src
 
+** move to beginning of line with contents
+#+begin_src emacs-lisp
+  (defun jocoo/move-to-beginning-of-line-with-contents ()
+    (interactive)
+    (beginning-of-line)
+    (ignore-errors (search-forward-regexp "^ +" (cdr (bounds-of-thing-at-point 'line)))))
+  (global-set-key (kbd "C-c ^") 'jocoo/move-to-beginning-of-line-with-contents)
+#+end_src
+
+** clear line and indent
+#+begin_src emacs-lisp
+  (defun jocoo/clear-line-and-indent ()
+    (interactive)
+    (move-to-beginning-of-line-with-contents)
+    (kill-line))
+  (global-set-key (kbd "C-c S") 'jocoo/clear-line-and-indent)
+#+end_src
+
+** join next line
+#+begin_src emacs-lisp
+  (defun jocoo/join-next-line ()
+    (interactive)
+    (next-line)
+    (join-line))
+  (global-set-key (kbd "C-c J") 'jocoo/join-next-line)
+#+end_src
+
+** move to char
+#+begin_src emacs-lisp
+  (defun jocoo/move-to-char-forward (char)
+    (interactive "cChar:")
+    (search-forward (char-to-string char)))
+  (global-set-key (kbd "C-c f") 'jocoo/move-to-char-forward)
+
+  (defun jocoo/move-to-char-backward (char)
+    (interactive "cChar:")
+    (search-backward (char-to-string char)))
+  (global-set-key (kbd "C-c F") 'jocoo/move-to-char-backward)
+#+end_src
+
+** wrap current s-expression
+#+begin_src emacs-lisp
+  (defun wrap-sexp ()
+    (interactive)
+    (search-forward ")")
+    (backward-kill-sexp)
+    (condition-case nil
+        (let ((lparen))
+          (insert "()")
+          (backward-char)
+          (setq lparen (point))
+          (insert (current-kill 0))
+          (goto-char lparen)
+          (insert " ")
+          (backward-char))
+      (error (message "Invalid expression")
+             (insert (current-kill 0)
+                     (current-buffer)))))
+  (global-set-key (kbd "C-c C-w") 'wrap-sexp)
+#+end_src
+
 ** copy/delete chars words lines paragraphs
 #+begin_src emacs-lisp
   ;; operate region macro
@@ -103,7 +168,7 @@
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-c z c") 'zap-to-char)
   (defun jocoo/zap-up-to-char (args char)
-    (interactive "p\\ncZap up to char:")
+    (interactive "p\ncZap up to char:")
     (zap-to-char args char)
     (insert char)
     (forward-char -1))
@@ -112,7 +177,7 @@
 
 ** Replacing the preceding sexp with its value.
 #+begin_src emacs-lisp
-  (defun eval-and-replace ()
+  (defun jocoo/eval-and-replace ()
     (interactive)
     (backward-kill-sexp)
     (condition-case nil
@@ -120,7 +185,7 @@
                (current-buffer))
       (error (message "Invalid expression")
              (insert (current-kill 0)))))
-  (global-set-key (kbd "C-c C-e") 'eval-and-replace)
+  (global-set-key (kbd "C-c C-e") 'jocoo/eval-and-replace)
 #+end_src
 
 ** find file at position
@@ -153,8 +218,22 @@
   (scroll-bar-mode -1)
 #+end_src
 
+** set line number
+#+begin_src emacs-lisp
+  (global-linum-mode t)
+#+end_src
 ** set color theme
 #+begin_src emacs-lisp
+  (defvar after-load-theme-hook nil
+    "Hook run after a color theme is loaded using `load-theme'.")
+  (defadvice load-theme (after run-after-load-theme-hook activate)
+    "Run `after-load-theme-hook'."
+    (run-hooks 'after-load-theme-hook))
+  (setq after-load-theme-hook
+        (lambda ()
+          (set-face-background 'linum (face-attribute 'default :background))
+          (set-face-foreground 'linum "#555555")))
+
   (use-package spacemacs-theme 
     :ensure t
     :defer t
@@ -178,10 +257,6 @@
 
 #+RESULTS:
 
-** show line number
-#+begin_src emacs-lisp
-  (global-linum-mode t)
-#+end_src
 ** set startup frame size 
 #+begin_src emacs-lisp
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -189,6 +264,13 @@
   ;; split window horizontally
   (setq split-height-threshold nil)
   (setq split-width-threshold 0)
+#+end_src
+
+** beacon
+#+begin_src emacs-lisp
+  (require 'beacon)
+  (beacon-mode 1)
+  (setq beacon-color "#bc6ec5")
 #+end_src
 
 * auto complete
