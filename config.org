@@ -66,7 +66,7 @@
   (defun jocoo/move-to-beginning-of-line-with-contents ()
     (interactive)
     (beginning-of-line)
-    (ignore-errors (search-forward-regexp "^ +" (cdr (bounds-of-thing-at-point 'line)))))
+    (ignore-errors (search-forward-regexp "^[ \t]+" (cdr (bounds-of-thing-at-point 'line)))))
   (global-set-key (kbd "C-c ^") 'jocoo/move-to-beginning-of-line-with-contents)
 #+end_src
 
@@ -268,9 +268,9 @@
 
 ** beacon
 #+begin_src emacs-lisp
-  (require 'beacon)
-  (beacon-mode 1)
-  (setq beacon-color "#bc6ec5")
+  ;; (require 'beacon)
+  ;; (beacon-mode 1)
+  ;; (setq beacon-color "#bc6ec5")
 #+end_src
 
 * auto complete
