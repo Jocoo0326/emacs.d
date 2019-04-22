@@ -25,8 +25,8 @@ There are two things you can do about this warning:
 
 (setq url-proxy-services
       '(("no_proxy" . "^\\(localhost\\|10.*\\|192.*\\)")
-	("http"     . "localhost:1080")
-	("https"    . "localhost:1080")))
+	("http"     . "192.168.203.44:1080")
+	("https"    . "192.168.203.44:1080")))
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
