@@ -13,6 +13,13 @@
   (when (file-exists-p custom-file)
     (load custom-file))
 #+end_src
+** Putting all files in one directory
+#+begin_src emacs-lisp
+  (setq backup-directory-alist
+        `((".*" . ,temporary-file-directory)))
+  (setq auto-save-file-name-transforms
+        `((".*" ,temporary-file-directory t)))
+#+end_src
 
 * Quick editting
 ** avy
@@ -23,7 +30,6 @@
     (global-set-key (kbd "C-c j") 'avy-goto-char)
     (global-set-key (kbd "C-c g") 'avy-goto-word-or-subword-1))
 #+end_src
-
 ** multiple cursors
 #+begin_src emacs-lisp
   (use-package multiple-cursors
@@ -35,17 +41,12 @@
   (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
   (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 #+end_src
-
 ** expand region
 #+begin_src emacs-lisp
   (use-package expand-region
     :ensure t
     :bind (("C-=" . er/expand-region)))
 #+end_src
-
-#+RESULTS:
-: er/expand-region
-
 ** insert new line above current line
 #+begin_src emacs-lisp
   (defun jocoo/insert-new-line-before-current (times)
@@ -56,7 +57,6 @@
     (indent-for-tab-command))
   (global-set-key (kbd "C-S-o") 'jocoo/insert-new-line-before-current)
 #+end_src
-
 ** insert new line below current line
 #+begin_src emacs-lisp
   (defun jocoo/insert-new-line-below-current (times)
@@ -66,7 +66,6 @@
     (indent-for-tab-command))
   (global-set-key (kbd "C-o") 'jocoo/insert-new-line-below-current)
 #+end_src
-
 ** move to beginning of line with contents
 #+begin_src emacs-lisp
   (defun jocoo/move-to-beginning-of-line-with-contents ()
@@ -75,7 +74,6 @@
     (ignore-errors (search-forward-regexp "^[ \t]+" (cdr (bounds-of-thing-at-point 'line)))))
   (global-set-key (kbd "C-c ^") 'jocoo/move-to-beginning-of-line-with-contents)
 #+end_src
-
 ** clear line and indent
 #+begin_src emacs-lisp
   (defun jocoo/clear-line-and-indent ()
@@ -84,7 +82,6 @@
     (kill-line))
   (global-set-key (kbd "C-c S") 'jocoo/clear-line-and-indent)
 #+end_src
-
 ** join next line
 #+begin_src emacs-lisp
   (defun jocoo/join-next-line ()
@@ -93,7 +90,6 @@
     (join-line))
   (global-set-key (kbd "C-c J") 'jocoo/join-next-line)
 #+end_src
-
 ** move to char
 #+begin_src emacs-lisp
   (defun jocoo/move-to-char-forward (char)
@@ -106,7 +102,6 @@
     (search-backward (char-to-string char)))
   (global-set-key (kbd "C-c F") 'jocoo/move-to-char-backward)
 #+end_src
-
 ** wrap current s-expression
 #+begin_src emacs-lisp
   (defun wrap-sexp ()
@@ -127,7 +122,6 @@
                      (current-buffer)))))
   (global-set-key (kbd "C-c C-w") 'wrap-sexp)
 #+end_src
-
 ** copy/delete chars words lines paragraphs
 #+begin_src emacs-lisp
   ;; operate region macro
@@ -169,7 +163,6 @@
   (global-set-key (kbd "C-c d p") 'jocoo/delete-paragraph-under)
   (global-set-key (kbd "C-c v p") 'mark-paragraph)
 #+end_src
-
 ** zap [up] to char operations
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-c z c") 'zap-to-char)
@@ -180,7 +173,6 @@
     (forward-char -1))
   (global-set-key (kbd "C-c z u") 'jocoo/zap-up-to-char)
 #+end_src
-
 ** Replacing the preceding sexp with its value.
 #+begin_src emacs-lisp
   (defun jocoo/eval-and-replace ()
@@ -193,28 +185,83 @@
              (insert (current-kill 0)))))
   (global-set-key (kbd "C-c C-e") 'jocoo/eval-and-replace)
 #+end_src
-
 ** find file at position
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-]") 'ffap)
 #+end_src
-
 ** delete region when typing
 #+begin_src emacs-lisp
   (pending-delete-mode t)
 #+end_src
-
 ** enable paren mode
 #+begin_src emacs-lisp
   (show-paren-mode)
   (electric-pair-mode)
 #+end_src
+** move more quickly
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-S-n")
+                  (lambda ()
+                    (interactive)
+                    (ignore-errors (next-line 5))))
 
+  (global-set-key (kbd "C-S-p")
+                  (lambda ()
+                    (interactive)
+                    (ignore-errors (previous-line 5))))
+
+  (global-set-key (kbd "C-S-f")
+                  (lambda ()
+                    (interactive)
+                    (ignore-errors (forward-char 5))))
+
+  (global-set-key (kbd "C-S-b")
+                  (lambda ()
+                    (interactive)
+                    (ignore-errors (backward-char 5))))
+#+end_src
+** removes file connected to current buffer and kills buffer
+#+begin_src emacs-lisp
+  (defun jocoo/delete-current-buffer-file ()
+    "Removes file connected to current buffer and kills buffer."
+    (interactive)
+    (let ((filename (buffer-file-name))
+          (buffer (current-buffer)))
+      (if (not (and filename (file-exists-p filename)))
+          (ido-kill-buffer)
+        (when (yes-or-no-p (format "Are you sure to remove this file '%s'?" filename))
+          (delete-file filename)
+          (kill-buffer buffer)
+          (message "File '%s' successfully removed." filename)))))
+
+  (global-set-key (kbd "C-x C-k") 'jocoo/delete-current-buffer-file)
+#+end_src
+** move line up and down
+#+begin_src emacs-lisp
+  (defun jocoo/move-line-down ()
+    (interactive)
+    (let ((col (current-column)))
+      (save-excursion
+        (forward-line)
+        (transpose-lines 1))
+      (forward-line)
+      (move-to-column col)))
+  (global-set-key (kbd "<C-S-down>") 'jocoo/move-line-down)
+
+  (defun jocoo/move-line-up ()
+    (interactive)
+    (let ((col (current-column)))
+      (save-excursion
+        (forward-line)
+        (transpose-lines -1))
+      (forward-line -2)
+      (move-to-column col)))
+  (global-set-key (kbd "<C-S-up>") 'jocoo/move-line-up)
+#+end_src
 * Restclient
 #+begin_src emacs-lisp
-  (require 'restclient)
+  (autoload 'restclient "restclient.el")
 #+end_src
-
 * appearance
 ** disable startup page and all bars
 #+begin_src emacs-lisp
@@ -223,7 +270,6 @@
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
 #+end_src
-
 ** set line number
 #+begin_src emacs-lisp
   (global-linum-mode t)
@@ -245,13 +291,11 @@
     :defer t
     :init (load-theme 'spacemacs-dark t))
 #+end_src
-
 ** set region face in windows
 #+begin_src emacs-lisp
   (when (string-equal system-type "windows-nt")
     (set-face-attribute 'region nil :background "#FFF" :foreground "#93A1A1"))
 #+end_src
-
 ** set default font
 #+begin_src emacs-lisp
   (cond ((string-equal system-type "darwin")
@@ -260,9 +304,6 @@
              (string-equal system-type "windows-nt"))
          (set-default-font "Fira Code-12")))
 #+end_src
-
-#+RESULTS:
-
 ** set startup frame size 
 #+begin_src emacs-lisp
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -271,14 +312,20 @@
   (setq split-height-threshold nil)
   (setq split-width-threshold 0)
 #+end_src
-
 ** beacon
 #+begin_src emacs-lisp
   ;; (require 'beacon)
   ;; (beacon-mode 1)
   ;; (setq beacon-color "#bc6ec5")
 #+end_src
-
+** highlight current line
+#+begin_src emacs-lisp
+  (global-hl-line-mode 1)
+#+end_src
+** silent blink cursors
+#+begin_src emacs-lisp
+  (blink-cursor-mode -1)
+#+end_src
 * auto complete
 ** yasnippet
 #+begin_src emacs-lisp
@@ -290,15 +337,21 @@
     :config
     (yas-global-mode 1))
 #+end_src
-
 ** company
 #+begin_src emacs-lisp
   (use-package company
-    :ensure t)
+    :ensure t
+    :config
+    (add-hook 'after-init-hook 'global-company-mode))
 
-  (add-hook 'after-init-hook 'global-company-mode)
+  (use-package company-c-headers
+    :ensure t
+    :config
+    (eval-after-load 'c-mode-common-hook
+      (progn
+        (setq company-backends (delete 'company-semantic company-backends))
+        (add-to-list 'company-backends 'company-c-headers))))
 #+end_src
-
 * project
 ** files tree
 #+begin_src emacs-lisp
@@ -307,19 +360,15 @@
     :config
     (global-set-key [f8] 'neotree-toggle))
 #+end_src
-
 ** helm ggtags
 #+begin_src emacs-lisp
   (use-package helm
-    :ensure t)
-
-  (require 'helm-config)
-
-  (global-set-key (kbd "M-x") #'helm-M-x)
-  (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
-  (global-set-key (kbd "C-x C-f") #'helm-find-files)
-
-  (helm-mode 1)
+    :ensure t
+    :config
+    (global-set-key (kbd "M-x") #'helm-M-x)
+    (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+    (global-set-key (kbd "C-x C-f") #'helm-find-files)
+    (helm-mode 1))
 
   (use-package ggtags
     :ensure t)
@@ -354,22 +403,15 @@
   (use-package projectile
     :ensure t
     :config
-    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-    (projectile-mode +1))
-
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
   (use-package helm-projectile
-    :ensure t
-    :config
-    (require 'helm-projectile)
-    (helm-projectile-on))
+    :ensure t)
 #+end_src
-
 ** magit
 #+begin_src emacs-lisp
   (use-package magit
     :ensure t)
 #+end_src
-
 * utils
 #+begin_src emacs-lisp
   (defun show-last-command ()
@@ -377,15 +419,8 @@
     (interactive)
     (eval-expression 'last-command))
   (global-set-key (kbd "C-c C-l") 'show-last-command)
-
-  ;; Putting all files in one directory
-  (setq backup-directory-alist
-        `((".*" . ,temporary-file-directory)))
-  (setq auto-save-file-name-transforms
-        `((".*" ,temporary-file-directory t)))
 #+end_src
-
 ** translate
 #+begin_src emacs-lisp
-  (require 'translate)
+  (autoload 'translate "translate.el")
 #+end_src
