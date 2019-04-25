@@ -78,7 +78,7 @@
 #+begin_src emacs-lisp
   (defun jocoo/clear-line-and-indent ()
     (interactive)
-    (move-to-beginning-of-line-with-contents)
+    (jocoo/move-to-beginning-of-line-with-contents)
     (kill-line))
   (global-set-key (kbd "C-c S") 'jocoo/clear-line-and-indent)
 #+end_src
@@ -235,6 +235,18 @@
           (message "File '%s' successfully removed." filename)))))
 
   (global-set-key (kbd "C-x C-k") 'jocoo/delete-current-buffer-file)
+#+end_src
+** copy current buffer file path
+#+begin_src emacs-lisp
+  (defun jocoo/copy-buffer-file-path ()
+    (interactive)
+    (let ((filepath (buffer-file-name)))
+      (if (not (and filepath (file-exists-p filepath)))
+          (message "no file connect to this buffer.")
+        (kill-new filepath)
+        (message "'%s' copyed." filepath))))
+
+  (global-set-key (kbd "C-c b f p") 'jocoo/copy-buffer-file-path)
 #+end_src
 ** move line up and down
 #+begin_src emacs-lisp
