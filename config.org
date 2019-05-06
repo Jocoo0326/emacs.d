@@ -21,6 +21,10 @@
         `((".*" ,temporary-file-directory t)))
 #+end_src
 
+** enable org-indent-mode for org-mode
+#+begin_src emacs-lisp
+  (add-hook 'org-mode-hook 'org-indent-mode)
+#+end_src
 * Quick editting
 ** avy
 #+begin_src emacs-lisp
@@ -104,7 +108,7 @@
 #+end_src
 ** wrap current s-expression
 #+begin_src emacs-lisp
-  (defun wrap-sexp ()
+  (defun jocoo/wrap-sexp ()
     (interactive)
     (search-forward ")")
     (backward-kill-sexp)
@@ -120,7 +124,7 @@
       (error (message "Invalid expression")
              (insert (current-kill 0)
                      (current-buffer)))))
-  (global-set-key (kbd "C-c C-w") 'wrap-sexp)
+  (global-set-key (kbd "C-c C-w") 'jocoo/wrap-sexp)
 #+end_src
 ** copy/delete chars words lines paragraphs
 #+begin_src emacs-lisp
@@ -270,6 +274,22 @@
       (move-to-column col)))
   (global-set-key (kbd "<C-S-up>") 'jocoo/move-line-up)
 #+end_src
+** repeat current line
+#+begin_src emacs-lisp
+  (defun jocoo/repeat-current-line ()
+    (interactive)
+    (let* ((line-bounds (bounds-of-thing-at-point 'line))
+           (line-begin (car line-bounds))
+           (line-end (cdr line-bounds))
+           (current-column (point)))
+      (copy-region-as-kill line-begin line-end)
+      (save-excursion
+        (move-end-of-line 1)
+        (newline)
+        (yank))
+      (next-line)))
+  (global-set-key (kbd "C-c r l") 'jocoo/repeat-current-line)
+#+end_src
 * Restclient
 #+begin_src emacs-lisp
   (autoload 'restclient "restclient.el")
@@ -284,7 +304,7 @@
 #+end_src
 ** set line number
 #+begin_src emacs-lisp
-  (global-linum-mode t)
+  ;; (global-linum-mode t)
 #+end_src
 ** set color theme
 #+begin_src emacs-lisp
@@ -301,7 +321,8 @@
   (use-package spacemacs-theme 
     :ensure t
     :defer t
-    :init (load-theme 'spacemacs-dark t))
+    ;; :init (load-theme 'spacemacs-dark t))
+  )
 #+end_src
 ** set region face in windows
 #+begin_src emacs-lisp
@@ -318,7 +339,7 @@
 #+end_src
 ** set startup frame size 
 #+begin_src emacs-lisp
-  (add-to-list 'default-frame-alist '(fullscreen . maximized))
+  ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
   ;; split window horizontally
   (setq split-height-threshold nil)
@@ -374,41 +395,41 @@
 #+end_src
 ** helm ggtags
 #+begin_src emacs-lisp
-  (use-package helm
-    :ensure t
-    :config
-    (global-set-key (kbd "M-x") #'helm-M-x)
-    (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
-    (global-set-key (kbd "C-x C-f") #'helm-find-files)
-    (helm-mode 1))
+  ;; (use-package helm
+  ;;   :ensure t
+  ;;   :config
+  ;;   (global-set-key (kbd "M-x") #'helm-M-x)
+  ;;   (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+  ;;   (global-set-key (kbd "C-x C-f") #'helm-find-files)
+  ;;   (helm-mode 1))
 
-  (use-package ggtags
-    :ensure t)
+  ;; (use-package ggtags
+  ;;   :ensure t)
 
-  (use-package helm-gtags
-    :ensure t
-    :config
-    ;;; Enable helm-gtags-mode
-    (add-hook 'c-mode-hook 'helm-gtags-mode)
-    (add-hook 'c++-mode-hook 'helm-gtags-mode)
-    (add-hook 'java-mode-hook 'helm-gtags-mode)
+  ;; (use-package helm-gtags
+  ;;   :ensure t
+  ;;   :config
+  ;;   ;;; Enable helm-gtags-mode
+  ;;   (add-hook 'c-mode-hook 'helm-gtags-mode)
+  ;;   (add-hook 'c++-mode-hook 'helm-gtags-mode)
+  ;;   (add-hook 'java-mode-hook 'helm-gtags-mode)
 
-    ;; customize
-    (custom-set-variables
-     '(helm-gtags-path-style 'relative)
-     '(helm-gtags-ignore-case t)
-     '(helm-gtags-auto-update t))
+  ;;   ;; customize
+  ;;   (custom-set-variables
+  ;;    '(helm-gtags-path-style 'relative)
+  ;;    '(helm-gtags-ignore-case t)
+  ;;    '(helm-gtags-auto-update t))
 
-    ;; key bindings
-    (with-eval-after-load 'helm-gtags
-      (define-key helm-gtags-mode-map (kbd "M-]") 'helm-gtags-find-tag-from-here)
-      (define-key helm-gtags-mode-map (kbd "M-t") 'helm-gtags-find-tag)
-      (define-key helm-gtags-mode-map (kbd "M-r") 'helm-gtags-find-rtag)
-      (define-key helm-gtags-mode-map (kbd "M-s") 'helm-gtags-find-symbol)
-      (define-key helm-gtags-mode-map (kbd "M-g M-p") 'helm-gtags-parse-file)
-      (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
-      (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
-      (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)))
+  ;;   ;; key bindings
+  ;;   (with-eval-after-load 'helm-gtags
+  ;;     (define-key helm-gtags-mode-map (kbd "M-]") 'helm-gtags-find-tag-from-here)
+  ;;     (define-key helm-gtags-mode-map (kbd "M-t") 'helm-gtags-find-tag)
+  ;;     (define-key helm-gtags-mode-map (kbd "M-r") 'helm-gtags-find-rtag)
+  ;;     (define-key helm-gtags-mode-map (kbd "M-s") 'helm-gtags-find-symbol)
+  ;;     (define-key helm-gtags-mode-map (kbd "M-g M-p") 'helm-gtags-parse-file)
+  ;;     (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+  ;;     (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+  ;;     (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)))
 #+end_src
 ** projectile
 #+begin_src emacs-lisp
