@@ -290,6 +290,40 @@
       (next-line)))
   (global-set-key (kbd "C-c r l") 'jocoo/repeat-current-line)
 #+end_src
+** reformat buffer
+#+begin_src emacs-lisp
+  (defun jocoo/reformat-buffer ()
+    "indent current buffer"
+    (interactive)
+    (save-excursion 
+      (indent-region (point-min) (point-max))))
+  (global-set-key (kbd "C-c re") 'jocoo/reformat-buffer)
+#+end_src
+** trim sexp
+#+begin_src emacs-lisp
+  (defun jocoo/trim-sexp ()
+    "remove the function header of the current sexp.
+  exp:
+      (fun |VARLIST) -> VARLIST
+  "
+    (interactive)
+    (save-excursion
+      (when (re-search-backward "([a-zA-Z0-9-]+" nil t)
+        (let ((bounds (bounds-of-thing-at-point 'sexp)))
+          (goto-char (cdr bounds))
+          (backward-delete-char 1)
+          (goto-char (car bounds))
+          (when (re-search-forward "([a-zA-Z0-9-]+\\( \\|\n\\)" nil t)
+            (delete-region (car bounds) (point)))
+          (indent-region (point-min) (point-max))))))
+  (add-hook 'lisp-mode-hook
+            (lambda ()
+              (local-set-key (kbd "C-c tr") 'jocoo/trim-sexp)))
+
+  (add-hook 'lisp-interaction-mode-hook
+            (lambda ()
+              (local-set-key (kbd "C-c tr") 'jocoo/trim-sexp)))
+#+end_src
 * Restclient
 #+begin_src emacs-lisp
   (autoload 'restclient "restclient.el")
@@ -335,7 +369,7 @@
          (set-default-font "Monaco-13"))
         ((or (string-equal system-type "gnu/linux")
              (string-equal system-type "windows-nt"))
-         (set-default-font "Fira Code-12")))
+         (set-default-font "Fira Code-13")))
 #+end_src
 ** set startup frame size 
 #+begin_src emacs-lisp

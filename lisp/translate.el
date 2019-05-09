@@ -70,3 +70,9 @@
 (global-set-key (kbd "C-c C-t") 'jocoo/translate-word-or-region)
 
 (provide 'translate)
+
+(defun jocoo/translate-inline (word)
+  "get translate word result"
+  (interactive "P")
+  (setenv "PATH" (concat "C:\\msys64\\mingw64\\bin;" (getenv "PATH")))
+  (shell-command-to-string (concat "curl -s -d \"" (get-form-data word) "\" \"" translate-url "\" | jq .trans_result[0].dst")))
