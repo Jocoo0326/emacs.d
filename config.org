@@ -109,21 +109,15 @@
 ** wrap current s-expression
 #+begin_src emacs-lisp
   (defun jocoo/wrap-sexp ()
-    (interactive)
-    (search-forward ")")
-    (backward-kill-sexp)
-    (condition-case nil
-        (let ((lparen))
-          (insert "()")
-          (backward-char)
-          (setq lparen (point))
-          (insert (current-kill 0))
-          (goto-char lparen)
-          (insert " ")
-          (backward-char))
-      (error (message "Invalid expression")
-             (insert (current-kill 0)
-                     (current-buffer)))))
+    (interactive)  
+    (when (re-search-backward "([a-zA-Z0-9-]+" nil t)
+      (let ((bounds (bounds-of-thing-at-point 'sexp)))
+        (goto-char (cdr bounds))
+        (insert ")")
+        (goto-char (car bounds))
+        (insert "( ")
+        (backward-char 1)
+        (indent-region (point-min) (point-max)))))
   (global-set-key (kbd "C-c C-w") 'jocoo/wrap-sexp)
 #+end_src
 ** copy/delete chars words lines paragraphs
@@ -239,6 +233,25 @@
           (message "File '%s' successfully removed." filename)))))
 
   (global-set-key (kbd "C-x C-k") 'jocoo/delete-current-buffer-file)
+#+end_src
+** rename buffer file name
+#+begin_src emacs-lisp
+  (defun jocoo/rename-current-buffer-file ()
+    (interactive)
+    (let ((name (buffer-name))
+          (filename (buffer-file-name)))
+      (if (not (and filename (file-exists-p filename)))
+          (error "Buffer '%s' is not visiting a file!" name)
+        (let ((new-name (read-file-name "New name: " filename)))
+          (if (get-buffer new-name)
+              (error "A buffer named '%s' already exists!" new-name)
+            (rename-file filename new-name)
+            (rename-buffer new-name)
+            (set-visited-file-name new-name)
+            (set-buffer-modified-p nil)
+            (message "File '%s' successfully rename to '%s'"
+                     name (file-name-nondirectory new-name)))))))
+  (global-set-key (kbd "C-c rf") 'jocoo/rename-current-buffer-file)
 #+end_src
 ** copy current buffer file path
 #+begin_src emacs-lisp
