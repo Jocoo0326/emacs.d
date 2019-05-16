@@ -26,6 +26,34 @@
   (add-hook 'org-mode-hook 'org-indent-mode)
 #+end_src
 * Quick editting
+** indent buffer
+#+begin_src emacs-lisp
+  (defun jocoo/indent-buffer ()
+    (interactive)
+    (indent-region (point-min) (point-max)))
+#+end_src
+** new defun at point
+#+begin_src emacs-lisp
+  (defun jocoo/new-defun-at-point ()
+    (interactive)
+    (let* ((bounds (bounds-of-thing-at-point 'sexp))
+           (begin (car bounds))
+           (end (cdr bounds))
+           (defun-name (buffer-substring begin end))
+           (cursor-placeholder "|"))
+      (beginning-of-defun)
+      (insert (format "(defun %s ()" defun-name))
+      (newline-and-indent)
+      (insert cursor-placeholder)
+      (newline-and-indent)
+      (insert ")")
+      (newline 2)
+      (search-backward cursor-placeholder)
+      (forward-char 1)
+      (delete-char -1)
+      (jocoo/indent-buffer)))
+  (global-set-key (kbd "C-c ndef") 'jocoo/new-defun-at-point)
+#+end_src
 ** avy
 #+begin_src emacs-lisp
   (use-package avy
@@ -105,20 +133,6 @@
     (interactive "cChar:")
     (search-backward (char-to-string char)))
   (global-set-key (kbd "C-c F") 'jocoo/move-to-char-backward)
-#+end_src
-** wrap current s-expression
-#+begin_src emacs-lisp
-  (defun jocoo/wrap-sexp ()
-    (interactive)  
-    (when (re-search-backward "([a-zA-Z0-9-]+" nil t)
-      (let ((bounds (bounds-of-thing-at-point 'sexp)))
-        (goto-char (cdr bounds))
-        (insert ")")
-        (goto-char (car bounds))
-        (insert "( ")
-        (backward-char 1)
-        (indent-region (point-min) (point-max)))))
-  (global-set-key (kbd "C-c C-w") 'jocoo/wrap-sexp)
 #+end_src
 ** copy/delete chars words lines paragraphs
 #+begin_src emacs-lisp
@@ -311,6 +325,65 @@
     (save-excursion 
       (indent-region (point-min) (point-max))))
   (global-set-key (kbd "C-c re") 'jocoo/reformat-buffer)
+#+end_src
+** kill s-expression
+#+begin_src emacs-lisp
+  (defun jocoo/current-parse-state ()
+    (let ((point (point)))
+      (beginning-of-defun)
+      (parse-partial-sexp (point) point)))
+
+  (defun jocoo/in-string-p (&optional state)
+    (and (nth 3 (jocoo/current-parse-state)) t))
+
+  (defun jocoo/string-start+end-points ()
+    "Return cons of starts and ends of the string currently in"
+    (save-excursion
+      (let ((start (nth 8 (jocoo/current-parse-state))))
+        (goto-char start)
+        (forward-sexp)
+        (cons start (point)))))
+
+  (defun jocoo/kill-line-in-string ()
+    (if (save-excursion (skip-chars-forward " \t\n" (point-max))
+                        (eolp))
+        (kill-line)
+      (kill-region (point) (1- (cdr (jocoo/string-start+end-points)))))
+    )
+
+  (defun jocoo/sexp-start+end-points ()
+    "Return cons of starts and ends of the sexp currently in"
+    (save-excursion
+      (let ((start (car (last (nth 9 (jocoo/current-parse-state))))))
+        (goto-char (or start (point)))
+        (forward-sexp)
+        (cons start (point)))))
+
+  (defun jocoo/kill-sexp ()
+    (interactive)
+    (if (jocoo/in-string-p)
+        (jocoo/kill-line-in-string)
+      (kill-region (point) (1- (cdr (jocoo/sexp-start+end-points))))))
+
+  (add-hook 'lisp-interaction-mode-hook
+            (lambda ()
+              (local-set-key (kbd "C-k") 'jocoo/kill-sexp)))
+#+end_src
+** wrap current s-expression
+#+begin_src emacs-lisp
+  (defun jocoo/wrap-sexp ()
+    (interactive)  
+    (let ((bounds (jocoo/sexp-start+end-points)))
+      (goto-char (cdr bounds))
+      (insert ")")
+      (goto-char (car bounds))
+      (insert "( ")
+      (backward-char 1)
+      (jocoo/indent-buffer)))
+
+  (add-hook 'lisp-interaction-mode-hook
+            (lambda ()
+              (local-set-key (kbd "C-c C-w") 'jocoo/wrap-sexp)))
 #+end_src
 ** trim sexp
 #+begin_src emacs-lisp
