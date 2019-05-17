@@ -308,12 +308,10 @@
     (let* ((line-bounds (bounds-of-thing-at-point 'line))
            (line-begin (car line-bounds))
            (line-end (cdr line-bounds))
-           (current-column (point)))
-      (copy-region-as-kill line-begin line-end)
-      (save-excursion
-        (move-end-of-line 1)
-        (newline)
-        (yank))
+           (point (point)))
+      (move-beginning-of-line 1)
+      (insert (buffer-substring line-begin line-end))
+      (goto-char point)
       (next-line)))
   (global-set-key (kbd "C-c r l") 'jocoo/repeat-current-line)
 #+end_src
