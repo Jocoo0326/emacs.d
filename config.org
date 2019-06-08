@@ -25,6 +25,42 @@
 #+begin_src emacs-lisp
   (add-hook 'org-mode-hook 'org-indent-mode)
 #+end_src
+** flycheck
+#+begin_src emacs-lisp
+  (use-package flycheck
+    :ensure t
+    :config
+    (global-flycheck-mode 1))
+#+end_src
+** ivy
+#+begin_src emacs-lisp
+  (use-package ivy
+    :ensure t
+    :diminish (ivy-mode . "")
+    :config
+    (ivy-mode 1)
+    (setq ivy-use-virtual-buffers t)
+    (setq enable-recursive-minibuffers t)
+    (setq ivy-height 10)
+    (setq ivy-initial-inputs-alist nil)
+    (setq ivy-count-format "%d/%d")
+    (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
+    )
+#+end_src
+** counsel
+#+begin_src emacs-lisp
+  (use-package counsel
+    :ensure t
+    :bind (("M-x" . counsel-M-x)
+           ("\C-x \C-f" . counsel-find-file)))
+#+end_src
+** swiper
+#+begin_src emacs-lisp
+  (use-package swiper
+    :ensure t
+    :bind (("\C-s" . swiper)))
+#+end_src
+
 * Quick editting
 ** indent buffer
 #+begin_src emacs-lisp
@@ -375,8 +411,7 @@
       (goto-char (cdr bounds))
       (insert ")")
       (goto-char (car bounds))
-      (insert "( ")
-      (backward-char 1)
+      (insert "(")
       (jocoo/indent-buffer)))
 
   (add-hook 'lisp-interaction-mode-hook
@@ -408,6 +443,15 @@
             (lambda ()
               (local-set-key (kbd "C-c tr") 'jocoo/trim-sexp)))
 #+end_src
+** toggle quotes
+#+begin_src emacs-lisp
+  (use-package toggle-quotes
+    :ensure t
+    :config
+    (global-set-key (kbd "C-'") 'toggle-quotes)
+    )
+#+end_src
+
 * Restclient
 #+begin_src emacs-lisp
   (autoload 'restclient "restclient.el")
@@ -431,16 +475,15 @@
   (defadvice load-theme (after run-after-load-theme-hook activate)
     "Run `after-load-theme-hook'."
     (run-hooks 'after-load-theme-hook))
-  (setq after-load-theme-hook
-        (lambda ()
-          (set-face-background 'linum (face-attribute 'default :background))
-          (set-face-foreground 'linum "#555555")))
+  ;; (setq after-load-theme-hook
+  ;;       (lambda ()
+  ;;         (set-face-background 'linum (face-attribute 'default :background))
+  ;;         (set-face-foreground 'linum "#555555")))
 
   (use-package spacemacs-theme 
     :ensure t
     :defer t
-    ;; :init (load-theme 'spacemacs-dark t))
-  )
+    :init (load-theme 'spacemacs-light t))
 #+end_src
 ** set region face in windows
 #+begin_src emacs-lisp
@@ -453,7 +496,7 @@
          (set-default-font "Monaco-13"))
         ((or (string-equal system-type "gnu/linux")
              (string-equal system-type "windows-nt"))
-         (set-default-font "Fira Code-13")))
+         (set-default-font "Fira Code-11")))
 #+end_src
 ** set startup frame size 
 #+begin_src emacs-lisp
@@ -480,20 +523,35 @@
 * auto complete
 ** yasnippet
 #+begin_src emacs-lisp
-  (use-package yasnippet-snippets
-    :ensure t)
-
   (use-package yasnippet
     :ensure t
+    :init
+    (add-hook 'prog-mode-hook #'yas-minor-mode)
     :config
-    (yas-global-mode 1))
+    (yas-reload-all)
+    (yas-global-mode 1)
+    (use-package yasnippet-snippets
+      :ensure t)
+    )
 #+end_src
 ** company
 #+begin_src emacs-lisp
   (use-package company
     :ensure t
     :config
-    (add-hook 'after-init-hook 'global-company-mode))
+    (global-company-mode t)
+    (setq company-idel-delay 0)
+    (setq company-minimum-prefix-length 3)
+    (setq company-backends
+          '((company-files comapny-yasnippet company-keywords company-capf)
+            (company-abbrev company-dabbrev)))
+    )
+
+  (add-hook 'emacs-lisp-mode-hook
+            (lambda ()
+              (add-to-list (make-local-variable 'company-backends)
+                           'company-elisp)))
+
 
   (use-package company-c-headers
     :ensure t
@@ -561,7 +619,8 @@
 ** magit
 #+begin_src emacs-lisp
   (use-package magit
-    :ensure t)
+    :ensure t
+    :bind (("\C-x g" . magit-status)))
 #+end_src
 * utils
 #+begin_src emacs-lisp
@@ -575,3 +634,49 @@
 #+begin_src emacs-lisp
   (autoload 'translate "translate.el")
 #+end_src
+* js dev
+** js2-mode
+#+begin_src emacs-lisp
+  (use-package js2-mode
+    :ensure t
+    :mode (("\\.js\\'" . js2-mode)
+           ("\\.json\\'" . javascript-mode))
+    :init
+    (setq js2-basic-offset 2)
+    (setq js2-global-externs '("module" "require" "assert" "setInterval" "console" "__dirname__"))
+    )
+#+end_src
+** typescript
+#+begin_src emacs-lisp
+  (defun setup-tide-mode ()
+    (interactive)
+    (tide-setup)
+    (flycheck-mode +1)
+    (setq flycheck-check-syntax-automatically '(save mode-enabled))
+    (eldoc-mode +1)
+    (tide-hl-identifier-mode +1)
+    (company-mode +1))
+
+  (setq company-tooltip-align-annotations t)
+
+  (add-hook 'js2-mode-hook #'setup-tide-mode)
+
+  (use-package tide
+    :ensure t
+    :after (typescript-mode company flycheck)
+    :hook ((typescript-mode . tide-setup)
+           (typescript-mode . tide-hl-identifier-mode))
+    :config
+    (setq tide-completion-enable-autoimport-suggestions t))
+#+end_src
+** prettier
+#+begin_src emacs-lisp
+  (use-package prettier-js
+    :ensure t
+    :hook ((js2-mode . prettier-js-mode))
+    :config
+    (setq prettier-js-args '(
+                             "--trailing-comma" "all"
+                             "--backet-spacing" "false")))
+#+end_src
+
