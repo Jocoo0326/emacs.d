@@ -48,13 +48,26 @@
 (use-package iedit
   :ensure t)
 
+(use-package projectile
+  :ensure t
+  :bind-keymap
+  ("C-c p" . projectile-command-map))
+
 (use-package helm
   :ensure t
   :config
   (use-package helm-gtags
-    :ensure t)
+    :init
+    (setenv "GTAGSLIBPATH" "/usr/include")
+    :ensure t
+    :bind (("C-]" . 'helm-gtags-dwim)
+	   ("C-o" . 'helm-gtags-pop-stack)
+	   ("C-<f12>" . 'helm-gtags-parse-file))
+    :hook ((c-mode . helm-gtags-mode)
+	   (c-mode . linum-mode)))
   (use-package helm-projectile
-    :ensure t)
+    :ensure t
+    :bind (("C-c ss" . 'helm-projectile-ag)))
   :bind (("M-x" . 'helm-M-x)
 	 ("C-x C-f" . 'helm-find-files)))
 
