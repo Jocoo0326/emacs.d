@@ -67,7 +67,8 @@
 	   (c-mode . linum-mode)))
   (use-package helm-projectile
     :ensure t
-    :bind (("C-c ss" . 'helm-projectile-ag)))
+    :bind (("C-c ss" . 'helm-projectile-ag)
+	   ("C-c pf" . 'helm-projectile-find-file)))
   :bind (("M-x" . 'helm-M-x)
 	 ("C-x C-f" . 'helm-find-files)))
 
