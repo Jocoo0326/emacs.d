@@ -70,7 +70,7 @@
   (use-package helm-projectile
     :ensure t
     :bind (("C-c ss" . 'helm-projectile-ag)
-	   ("C-c pf" . 'helm-projectile-find-file-dwim))))
+	   ("C-c ff" . 'helm-projectile-find-file-dwim))))
 
 (use-package flycheck
   :ensure t)
@@ -81,3 +81,8 @@
 (use-package org-bullets
   :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
   :ensure t)
+
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-mode 1))
