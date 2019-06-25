@@ -55,6 +55,8 @@
 
 (use-package helm
   :ensure t
+  :bind (("M-x" . 'helm-M-x)
+	 ("C-x C-f" . 'helm-find-files))
   :config
   (use-package helm-gtags
     :init
@@ -68,9 +70,14 @@
   (use-package helm-projectile
     :ensure t
     :bind (("C-c ss" . 'helm-projectile-ag)
-	   ("C-c pf" . 'helm-projectile-find-file)))
-  :bind (("M-x" . 'helm-M-x)
-	 ("C-x C-f" . 'helm-find-files)))
+	   ("C-c pf" . 'helm-projectile-find-file-dwim))))
 
 (use-package flycheck
+  :ensure t)
+
+(use-package kotlin-mode
+  :ensure t)
+
+(use-package org-bullets
+  :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
   :ensure t)
