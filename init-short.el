@@ -56,7 +56,8 @@
 (use-package helm
   :ensure t
   :bind (("M-x" . 'helm-M-x)
-	 ("C-x C-f" . 'helm-find-files))
+	 ("C-x C-f" . 'helm-find-files)
+	 ("C-x b" . 'helm-buffers-list))
   :config
   (use-package helm-gtags
     :init
@@ -86,3 +87,5 @@
   :ensure t
   :config
   (which-key-mode 1))
+
+(add-hook 'prog-mode-hook 'linum-mode)
