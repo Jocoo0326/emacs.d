@@ -48,6 +48,13 @@
 (use-package iedit
   :ensure t)
 
+(use-package evil
+  :ensure t
+  :config
+  (evil-mode 1)
+  (define-key evil-motion-state-map (kbd "C-]") nil)
+  (define-key evil-motion-state-map (kbd "C-o") nil))
+
 (use-package projectile
   :ensure t
   :bind-keymap
@@ -104,3 +111,9 @@
   :config
   (winum-mode)
   (winum-set-keymap-prefix (kbd "C-c")))
+
+(add-hook 'c-mode-common-hook
+	  (lambda ()
+	    (setq c-default-style "linux"
+		  c-basic-offset 2)))
+
