@@ -89,3 +89,18 @@
   (which-key-mode 1))
 
 (add-hook 'prog-mode-hook 'linum-mode)
+
+(use-package avy
+  :ensure t
+  :bind (("C-c jj" . 'avy-goto-char)
+	 ("C-c jJ" . 'avy-goto-char-2)
+	 ("C-c jb" . 'avy-pop-mark)
+	 ("C-c jl" . 'avy-goto-line)))
+
+(use-package winum
+  :init
+  (windmove-default-keybindings)
+  :ensure t
+  :config
+  (winum-mode)
+  (winum-set-keymap-prefix (kbd "C-c")))
