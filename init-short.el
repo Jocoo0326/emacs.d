@@ -117,3 +117,14 @@
 	    (setq c-default-style "linux"
 		  c-basic-offset 2)))
 
+(use-package diminish
+  :ensure t
+  :config
+  (diminish 'which-key-mode)
+  (diminish 'undo-tree-mode)
+  (diminish 'yas-minor-mode)
+  (diminish 'company-mode)
+  (diminish 'company-mode)
+  (diminish 'auto-revert-mode)
+  (diminish 'eldoc-mode)
+  (diminish 'lisp-interaction-mode "LispI"))
