@@ -1,3 +1,6 @@
+;;------------------------------------------------
+;; basic
+;;------------------------------------------------
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
@@ -6,22 +9,32 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(setq
+ custom-file (expand-file-name "custom.el" user-emacs-directory)
+ backup-directory-alist `((".*" . ,temporary-file-directory))
+ auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
+ inhibit-startup-message t)
+
 (when (file-exists-p custom-file)
   (load custom-file))
-
-(setq backup-directory-alist
-      `((".*" . ,temporary-file-directory)))
-(setq auto-save-file-name-transforms
-      `((".*" ,temporary-file-directory t)))
 
 (show-paren-mode t)
 (electric-pair-mode t)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
-(setq inhibit-startup-message t)
 
+;;------------------------------------------------
+;; keybindings
+;;------------------------------------------------
+(global-set-key (kbd "C-c edf")
+		(lambda ()
+		  (interactive)
+		  (find-file (expand-file-name "init.el" user-emacs-directory))))
+
+;;------------------------------------------------
+;; packages
+;;------------------------------------------------
 (use-package magit
   :ensure t
   :bind (("C-x g" . 'magit-status)))
@@ -78,7 +91,7 @@
   (use-package helm-projectile
     :ensure t
     :bind (("C-c ss" . 'helm-projectile-ag)
-	   ("C-c ff" . 'helm-projectile-find-file-dwim))))
+	   ("C-c ff" . 'helm-projectile-find-file))))
 
 (use-package flycheck
   :ensure t)
@@ -115,7 +128,8 @@
 (add-hook 'c-mode-common-hook
 	  (lambda ()
 	    (setq c-default-style "linux"
-		  c-basic-offset 2)))
+		  c-basic-offset 2)
+	    (c-set-offset 'arglist-close 0)))
 
 (use-package diminish
   :ensure t
@@ -127,4 +141,10 @@
   (diminish 'company-mode)
   (diminish 'auto-revert-mode)
   (diminish 'eldoc-mode)
-  (diminish 'lisp-interaction-mode "LispI"))
+  (diminish 'helm-gtags-mode)
+  (diminish 'abbrev-mode))
+
+(use-package dracula-theme
+  :ensure t
+  :config
+  (load-theme 'dracula t))
