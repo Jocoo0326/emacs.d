@@ -37,9 +37,10 @@
 
 (defun jocoo/get-string-in-region (region-start region-end)
   (interactive "r")
-    (let ((str (buffer-substring-no-properties start end)))
+    (let ((str (buffer-substring-no-properties region-start region-end)))
       (setq str (replace-regexp-in-string "\s*\\*+" "" str))
-      str))
+      (prin1 str)
+      ))
 
 (defun jocoo/translate-word-or-region (start end)
   (interactive "r")
