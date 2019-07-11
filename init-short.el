@@ -9,6 +9,8 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+
 (setq
  custom-file (expand-file-name "custom.el" user-emacs-directory)
  backup-directory-alist `((".*" . ,temporary-file-directory))
@@ -112,8 +114,8 @@
 
 (use-package avy
   :ensure t
-  :bind (("C-c jj" . 'avy-goto-char)
-	 ("C-c jJ" . 'avy-goto-char-2)
+  :bind (("C-c jJ" . 'avy-goto-char)
+	 ("C-c jj" . 'avy-goto-char-2)
 	 ("C-c jb" . 'avy-pop-mark)
 	 ("C-c jl" . 'avy-goto-line)))
 
@@ -148,3 +150,6 @@
   :ensure t
   :config
   (load-theme 'dracula t))
+
+(use-package translate
+  :bind ("C-c C-t" . jocoo/translate-word-or-region))
