@@ -2,7 +2,9 @@
 ;; basic
 ;;------------------------------------------------
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+;; (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
+			 ("melpa" . "http://elpa.emacs-china.org/melpa/")))
 (package-initialize)
 
 (unless (package-installed-p 'use-package)
