@@ -95,7 +95,8 @@
   (use-package helm-projectile
     :ensure t
     :bind (("C-c ss" . 'helm-projectile-ag)
-	   ("C-c ff" . 'helm-projectile-find-file))))
+	   ("C-c ff" . 'helm-projectile-find-file)
+	   ("C-c fof". 'helm-projectile-find-other-file))))
 
 (use-package flycheck
   :ensure t)
