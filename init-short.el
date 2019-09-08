@@ -156,3 +156,6 @@
 
 (use-package translate
   :bind ("C-c C-t" . jocoo/translate-word-or-region))
+
+(use-package restclient
+  :ensure t)
