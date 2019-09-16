@@ -165,4 +165,5 @@
 	 ("C-c C-<" . 'mc/mark-all-like-this)))
 
 (use-package restclient
-  :ensure t)
+  :ensure t
+  :mode ("\\.rest\\'" . restclient-mode))
