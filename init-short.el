@@ -167,3 +167,11 @@
 (use-package restclient
   :ensure t
   :mode ("\\.rest\\'" . restclient-mode))
+
+(use-package recentf
+  :ensure t
+  :config
+  (recentf-mode 1)
+  (setq recentf-max-menu-items 30)
+  (setq recentf-max-saved-items 200)
+  :bind ("C-c C-r" . 'helm-recentf))
