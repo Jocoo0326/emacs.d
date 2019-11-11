@@ -191,5 +191,30 @@
   :config
   (global-set-key (kbd "C-'") 'toggle-quotes))
 
-(use-package goto-last-change
+(defun jocoo/mark-line (args)
+  "mark thing at point"
+  (interactive "P")
+  (when (region-active-p)
+    (move-end-of-line 1)
+    (set-mark (point))
+    (move-beginning-of-line 1)))
+
+;; marking
+(global-set-key (kbd "C-c m s") 'er/mark-symbol)
+(global-set-key (kbd "C-c m l") 'jocoo/mark-line)
+(global-set-key (kbd "C-c m q") 'er/mark-inside-quotes)
+(global-set-key (kbd "C-c m Q") 'er/mark-outside-quotes)
+(global-set-key (kbd "C-c m p") 'er/mark-inside-pairs)
+(global-set-key (kbd "C-c m P") 'er/mark-outside-pairs)
+(global-set-key (kbd "C-c m f") 'mark-defun)
+
+;; zap
+(global-set-key (kbd "M-z") 'zap-up-to-char)
+
+;; format
+(use-package clang-format+
   :ensure t)
+(add-hook 'c-mode-common-hook (lambda ()
+				(setq-local clang-format-style "Google")
+				(local-set-key (kbd "C-c \\") 'clang-format-buffer)
+				(clang-format+-mode 1)))
