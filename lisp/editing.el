@@ -193,3 +193,20 @@
 
 (use-package goto-last-change
   :ensure t)
+
+(use-package clang-format+
+  :ensure t)
+(add-hook 'c-mode-common-hook (lambda ()
+				(setq-local clang-format-style "Google")
+				(local-set-key (kbd "C-c \\") 'clang-format-buffer)
+				(clang-format+-mode 1)))
+
+(use-package cider
+  :ensure t
+  :config
+  (setq cider-repl-display-help-banner nil)
+  (use-package clj-refactor
+    :ensure t
+    :config
+    (cljr-add-keybindings-with-prefix "C-c C-m"))
+  :hook (clojure-mode . clj-refactor-mode))
