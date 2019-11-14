@@ -28,9 +28,10 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (set-default-font "Fira Code-11")
+(defalias 'yes-or-no-p 'y-or-n-p)
 
 (load (concat user-emacs-directory "lisp/editing.el"))
-(load (concat user-emacs-directory "lisp/whitespace-config.el"))
+;; (load (concat user-emacs-directory "lisp/whitespace-config.el"))
 
 ;;------------------------------------------------
 ;; keybindings
@@ -55,7 +56,9 @@
 
 (use-package swiper
   :ensure t
-  :bind (("C-s" . 'swiper)))
+  :bind (("C-s"   . 'isearch-forward)
+	 ("C-c /" . 'swiper)
+	 ("C-c *" . 'swiper-thing-at-point)))
 
 (use-package company
   :ensure t
@@ -102,7 +105,7 @@
   (use-package helm-etags-plus
     :ensure t
     :bind (("C-]" . 'helm-etags-plus-select)
-           ("C-o" . 'helm-etags-plus-history-go-back)))
+           ("C-o" . 'pop-tag-mark)))
   (use-package helm-projectile
     :ensure t
     :bind (("C-c ss" . 'helm-projectile-ag)
@@ -158,7 +161,8 @@
   (diminish 'auto-revert-mode)
   (diminish 'eldoc-mode)
   (diminish 'helm-gtags-mode)
-  (diminish 'abbrev-mode))
+  (diminish 'abbrev-mode)
+  (diminish 'clang-format+-mode))
 
 (use-package dracula-theme
   :ensure t
@@ -190,4 +194,3 @@
 (use-package paredit
   :ensure t
   :hook ((emacs-lisp-mode lisp-interaction-mode) . paredit-mode))
-
