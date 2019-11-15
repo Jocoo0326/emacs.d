@@ -90,7 +90,8 @@
   :ensure t
   :bind (("M-x" . 'helm-M-x)
          ("C-x C-f" . 'helm-find-files)
-         ("C-x b" . 'helm-buffers-list))
+         ("C-x b" . 'helm-buffers-list)
+	 ("C-c C-r" . 'helm-recentf))
   :config
   (use-package helm-gtags
     :init
@@ -193,4 +194,4 @@
 
 (use-package paredit
   :ensure t
-  :hook ((emacs-lisp-mode lisp-interaction-mode) . paredit-mode))
+  :hook ((emacs-lisp-mode lisp-interaction-mode clojure-mode) . paredit-mode))

@@ -218,3 +218,13 @@
 				(setq-local clang-format-style "Google")
 				(local-set-key (kbd "C-c \\") 'clang-format-buffer)
 				(clang-format+-mode 1)))
+
+(defun jocoo/mark-to-char (args char)
+  "mark to char(included)"
+  (interactive (list (prefix-numeric-value current-prefix-arg)
+		     (read-char "char: " t)))
+  (when (not (use-region-p))
+    (save-excursion
+      (search-forward (char-to-string char) (buffer-end 1) t args)
+      (exchange-point-and-mark))))
+(global-set-key (kbd "C-c m t c") 'jocoo/mark-to-char)
