@@ -214,6 +214,7 @@
 ;; format
 (use-package clang-format+
   :ensure t)
+
 (add-hook 'c-mode-common-hook (lambda ()
 				(setq-local clang-format-style "Google")
 				(local-set-key (kbd "C-c \\") 'clang-format-buffer)
@@ -228,3 +229,13 @@
       (search-forward (char-to-string char) (buffer-end 1) t args)
       (exchange-point-and-mark))))
 (global-set-key (kbd "C-c m t c") 'jocoo/mark-to-char)
+
+(use-package cider
+  :ensure t
+  :config
+  (setq cider-repl-display-help-banner nil)
+  (use-package clj-refactor
+    :ensure t
+    :config
+    (cljr-add-keybindings-with-prefix "C-c C-m"))
+  :hook (clojure-mode . clj-refactor-mode))
