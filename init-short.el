@@ -99,14 +99,16 @@
     :ensure t
     :bind (("C-]" . 'helm-gtags-dwim)
            ("C-o" . 'helm-gtags-pop-stack)
-           ("C-<f12>" . 'helm-gtags-parse-file))
+           ("C-<f12>" . 'helm-semantic-or-imenu))
     :hook (
            ;;(c-mode . helm-gtags-mode)
            (c-mode . linum-mode)))
   (use-package helm-etags-plus
     :ensure t
     :bind (("C-]" . 'helm-etags-plus-select)
-           ("C-o" . 'pop-tag-mark)))
+           ("C-o" . 'helm-etags-plus-history-go-back)
+           ("M-<left>" . 'helm-etags-plus-history-go-back)
+           ("M-<right>" . 'helm-etags-plus-history-go-forward)))
   (use-package helm-projectile
     :ensure t
     :bind (("C-c ss" . 'helm-projectile-ag)
@@ -128,7 +130,11 @@
   :config
   (which-key-mode 1))
 
-(add-hook 'prog-mode-hook 'linum-mode)
+(add-hook 'prog-mode-hook
+	  (lambda ()
+	    (linum-mode t)
+	    (eldoc-mode t)
+	    (setq show-trailing-whitespace t)))
 
 (use-package avy
   :ensure t
@@ -144,12 +150,6 @@
   :config
   (winum-mode)
   (winum-set-keymap-prefix (kbd "C-c")))
-
-(add-hook 'c-mode-common-hook
-          (lambda ()
-            (setq c-default-style "linux"
-                  c-basic-offset 2)
-            (c-set-offset 'arglist-close 0)))
 
 (use-package diminish
   :ensure t
@@ -195,3 +195,36 @@
 (use-package paredit
   :ensure t
   :hook ((emacs-lisp-mode lisp-interaction-mode clojure-mode) . paredit-mode))
+
+;; format
+(use-package clang-format+
+  :ensure t)
+
+(add-hook 'c-mode-common-hook
+	  (lambda ()
+	    (setq c-default-style "linux"
+                  c-basic-offset 2)
+	    (c-set-offset 'arglist-close 0)
+	    (setq-local clang-format-style "Google")
+	    (local-set-key (kbd "C-c \\") 'clang-format-buffer)
+	    (clang-format+-mode 1)))
+
+(use-package cider
+  :ensure t
+  :config
+  (setq cider-repl-display-help-banner nil)
+  (use-package clj-refactor
+    :ensure t
+    :config
+    (cljr-add-keybindings-with-prefix "C-c C-m"))
+  :hook (clojure-mode . clj-refactor-mode))
+
+(add-hook 'clojure-mode-hook
+	  (lambda ()
+	    (local-set-key (kbd "C-c \\") 'cider-format-buffer)))
+
+(use-package rtags
+  :ensure t)
+
+(use-package emacs-surround
+  :bind ("C-q" . 'emacs-surround))
