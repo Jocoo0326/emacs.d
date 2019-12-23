@@ -9,7 +9,7 @@
       (indent-for-tab-command)
       )))
 
-(global-set-key (kbd "C-c c l") 'jocoo/change-line)
+(global-set-key (kbd "C-c S") 'jocoo/change-line)
 
 (defun jocoo/indent-buffer ()
   (interactive)

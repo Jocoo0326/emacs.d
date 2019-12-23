@@ -228,3 +228,10 @@
 
 (use-package emacs-surround
   :bind ("C-q" . 'emacs-surround))
+
+(use-package java-imports
+  :ensure t
+  :config
+  (setq java-imports-find-block-function 'java-imports-find-place-sorted-block)
+  (define-key java-mode-map (kbd "M-I") 'java-imports-add-import-dwim)
+  (add-hook 'java-mode-hook 'java-imports-scan-file))
