@@ -1,0 +1,7 @@
+# key: ifp
+# name: ifp
+# --
+if (${1:res == -1}) {
+   perror("$2");
+   exit(-1);
+}$0

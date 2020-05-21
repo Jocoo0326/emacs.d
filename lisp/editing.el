@@ -215,3 +215,14 @@
       (search-forward (char-to-string char) (buffer-end 1) t args)
       (exchange-point-and-mark))))
 (global-set-key (kbd "C-c m t c") 'jocoo/mark-to-char)
+
+
+(defun jocoo/upcase-word-under-point (args)
+  (interactive "P")
+  (if (region-active-p)
+      (upcase-dwim args)
+    (save-excursion
+      (let ((bounds (bounds-of-thing-at-point 'word)))
+	(goto-char (car bounds))
+	(upcase-word 1)))))
+(global-set-key (kbd "C-c u w") 'jocoo/upcase-word-under-point)
