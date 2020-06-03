@@ -235,3 +235,13 @@
   (setq java-imports-find-block-function 'java-imports-find-place-sorted-block)
   (define-key java-mode-map (kbd "M-I") 'java-imports-add-import-dwim)
   (add-hook 'java-mode-hook 'java-imports-scan-file))
+
+(use-package emmet-mode
+  :ensure t)
+(use-package format-all
+  :ensure t)
+(use-package impatient-mode
+  :ensure t)
+(add-hook 'sgml-mode-hook
+	  (lambda ()
+	    (emmet-mode 1)))
