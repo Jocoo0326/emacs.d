@@ -245,3 +245,10 @@
 (add-hook 'sgml-mode-hook
 	  (lambda ()
 	    (emmet-mode 1)))
+
+(use-package eglot
+  :ensure t
+  :config
+  (add-to-list 'eglot-server-programs '((c-mode c++-mode) "clangd"))
+  :bind (("<f2>" . 'flymake-goto-next-error)
+	 ("s-<f2>" . 'flymake-goto-prev-error)))
