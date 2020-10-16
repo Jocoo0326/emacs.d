@@ -27,7 +27,7 @@
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
-(set-default-font "Fira Code-11")
+(set-frame-font "Fira Code-11")
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 (load (concat user-emacs-directory "lisp/editing.el"))
