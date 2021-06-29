@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: require
+# key: req
+# --
+${3:const} ${1:$(file-name-nondirectory yas-text)} = require("${1:http}")$2;$0
