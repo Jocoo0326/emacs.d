@@ -27,7 +27,7 @@
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
-(set-default-font "Fira Code-11")
+(set-frame-font "Fira Code-11")
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 (load (concat user-emacs-directory "lisp/editing.el"))
@@ -80,6 +80,12 @@
   ;; (evil-mode 1)
   (define-key evil-motion-state-map (kbd "C-]") nil)
   (define-key evil-motion-state-map (kbd "C-o") nil))
+(use-package evil-numbers
+  :ensure t
+  :after evil
+  :bind
+  (("C-c C-a" . 'evil-numbers/inc-at-pt)
+   ("C-c C-x" . 'evil-numbers/dec-at-pt)))
 
 (use-package projectile
   :ensure t
@@ -262,7 +268,7 @@
 (use-package lsp-mode
   :hook ((c-mode c++-mode) . #'lsp-deferred)
   :init
-  (require 'lsp-clients)
+  ;; (require 'lsp-clients)
   :config
   (setq lsp-clients-clangd-args '("--compile-commands-dir=./build" "--log=verbose" "--clang-tidy"))
   ;; (setq lsp-clients-emmy-lua-jar-path "/home/jocoo/Downloads/EmmyLua-LS-all.jar")
@@ -281,3 +287,19 @@
   :ensure t
   :config (setq lsp-dart-sdk-dir "~/d/workspace/flutter/bin/cache/dart-sdk/")
   (use-package flycheck-clang-tidy :ensure t))
+
+(use-package prettier-js
+  :ensure t)
+
+(use-package vue-mode
+  :ensure t
+  :after prettier-js
+  :hook (vue-mode . prettier-js-mode)
+  :mode "\\.vue\\'"
+  :config
+  (add-hook 'vue-mode-hook #'lsp)
+  ;; (add-hook 'js-mode-hook #'lsp)
+  (add-hook 'js-mode-hook #'prettier-js-mode)
+  (add-hook 'mmm-mode-hook
+	    (lambda ()
+	      (set-face-background 'mmm-default-submode-face nil))))
