@@ -189,10 +189,10 @@
 (defun jocoo/mark-line (args)
   "mark thing at point"
   (interactive "P")
-  (when (region-active-p)
-    (move-end-of-line 1)
+  (when (not (region-active-p))
+    (move-beginning-of-line 1)
     (set-mark (point))
-    (move-beginning-of-line 1)))
+    (move-end-of-line 1)))
 
 ;; marking
 (global-set-key (kbd "C-c m s") 'er/mark-symbol)

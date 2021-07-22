@@ -265,14 +265,14 @@
   :hook
   (flycheck-mode . flycheck-clang-tidy-setup))
 
-(use-package lsp-mode
-  :hook ((c-mode c++-mode) . #'lsp-deferred)
-  :init
+;; (use-package lsp-mode
+  ;; :hook ((c-mode c++-mode) . #'lsp-deferred)
+  ;; :init
   ;; (require 'lsp-clients)
-  :config
-  (setq lsp-clients-clangd-args '("--compile-commands-dir=./build" "--log=verbose" "--clang-tidy"))
+  ;; :config
+  ;; (setq lsp-clients-clangd-args '("--compile-commands-dir=./build" "--log=verbose" "--clang-tidy"))
   ;; (setq lsp-clients-emmy-lua-jar-path "/home/jocoo/Downloads/EmmyLua-LS-all.jar")
-  :commands lsp)
+  ;; :commands lsp)
 (use-package helm-lsp :commands helm-lsp-workspace-symbol)
 (use-package lsp-ui :commands lsp-ui-mode)
 (use-package company-lsp :commands company-lsp)
