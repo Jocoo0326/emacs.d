@@ -3,8 +3,8 @@
 ;;------------------------------------------------
 (require 'package)
 ;; (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-(setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
-                         ("melpa" . "http://elpa.emacs-china.org/melpa/")))
+(setq package-archives '(("gnu"   . "https://mirrors.ustc.edu.cn/elpa/gnu/")
+                         ("melpa" . "https://mirrors.ustc.edu.cn/elpa/melpa/")))
 (package-initialize)
 
 (unless (package-installed-p 'use-package)
