@@ -121,8 +121,8 @@
            ("C-c ff" . 'helm-projectile-find-file)
            ("C-c fof". 'helm-projectile-find-other-file))))
 
-(use-package flycheck
-  :ensure t)
+;; (use-package flycheck
+  ;; :ensure t)
 
 (use-package kotlin-mode
   :ensure t)
@@ -235,12 +235,12 @@
 (use-package emacs-surround
   :bind ("C-q" . 'emacs-surround))
 
-(use-package java-imports
-  :ensure t
-  :config
-  (setq java-imports-find-block-function 'java-imports-find-place-sorted-block)
-  (define-key java-mode-map (kbd "M-I") 'java-imports-add-import-dwim)
-  (add-hook 'java-mode-hook 'java-imports-scan-file))
+;; (use-package java-imports
+;;   :ensure t
+;;   :config
+;;   (setq java-imports-find-block-function 'java-imports-find-place-sorted-block)
+;;   (define-key java-mode-map (kbd "M-I") 'java-imports-add-import-dwim)
+;;   (add-hook 'java-mode-hook 'java-imports-scan-file))
 
 (use-package emmet-mode
   :ensure t)
@@ -252,18 +252,18 @@
 	  (lambda ()
 	    (emmet-mode 1)))
 
-(use-package eglot
-  :ensure t
-  :config
-  (add-to-list 'eglot-server-programs '((c-mode c++-mode) . ("clangd" "--log=verbose" "--clang-tidy")))
-  :bind (("<f2>" . 'flymake-goto-next-error)
-	 ("s-<f2>" . 'flymake-goto-prev-error)
-	 ("M-RET" . 'eglot-code-actions)))
+;; (use-package eglot
+;;   :ensure t
+;;   :config
+;;   (add-to-list 'eglot-server-programs '((c-mode c++-mode) . ("clangd" "--log=verbose" "--clang-tidy")))
+;;   :bind (("<f2>" . 'flymake-goto-next-error)
+;; 	 ("s-<f2>" . 'flymake-goto-prev-error)
+;; 	 ("M-RET" . 'eglot-code-actions)))
 
-(use-package flycheck-clang-tidy
-  :after flycheck
-  :hook
-  (flycheck-mode . flycheck-clang-tidy-setup))
+;; (use-package flycheck-clang-tidy
+;;   :after flycheck
+;;   :hook
+;;   (flycheck-mode . flycheck-clang-tidy-setup))
 
 ;; (use-package lsp-mode
   ;; :hook ((c-mode c++-mode) . #'lsp-deferred)
@@ -273,33 +273,33 @@
   ;; (setq lsp-clients-clangd-args '("--compile-commands-dir=./build" "--log=verbose" "--clang-tidy"))
   ;; (setq lsp-clients-emmy-lua-jar-path "/home/jocoo/Downloads/EmmyLua-LS-all.jar")
   ;; :commands lsp)
-(use-package helm-lsp :commands helm-lsp-workspace-symbol)
-(use-package lsp-ui :commands lsp-ui-mode)
-(use-package company-lsp :commands company-lsp)
-(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+;; (use-package helm-lsp :commands helm-lsp-workspace-symbol)
+;; (use-package lsp-ui :commands lsp-ui-mode)
+;; (use-package company-lsp :commands company-lsp)
+;; (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
 ;; (use-package ccls
 ;;   :ensure t
 ;;   :hook ((c-mode c++-mode) . (lambda () (require 'ccls) (lsp)))
 ;;   :config (setq ccls-executable "ccls")
 ;;   :bind (("<f2>" . 'flycheck-next-error)
 ;; 	 ("s-<f2>" . 'flycheck-previous-error)))
-(use-package lsp-dart
-  :ensure t
-  :config (setq lsp-dart-sdk-dir "~/d/workspace/flutter/bin/cache/dart-sdk/")
-  (use-package flycheck-clang-tidy :ensure t))
+;; (use-package lsp-dart
+;;   :ensure t
+;;   :config (setq lsp-dart-sdk-dir "~/d/workspace/flutter/bin/cache/dart-sdk/")
+;;   (use-package flycheck-clang-tidy :ensure t))
 
-(use-package prettier-js
-  :ensure t)
+;; (use-package prettier-js
+;;   :ensure t)
 
-(use-package vue-mode
-  :ensure t
-  :after prettier-js
-  :hook (vue-mode . prettier-js-mode)
-  :mode "\\.vue\\'"
-  :config
-  (add-hook 'vue-mode-hook #'lsp)
-  ;; (add-hook 'js-mode-hook #'lsp)
-  (add-hook 'js-mode-hook #'prettier-js-mode)
-  (add-hook 'mmm-mode-hook
-	    (lambda ()
-	      (set-face-background 'mmm-default-submode-face nil))))
+;; (use-package vue-mode
+;;   :ensure t
+;;   :after prettier-js
+;;   :hook (vue-mode . prettier-js-mode)
+;;   :mode "\\.vue\\'"
+;;   :config
+;;   (add-hook 'vue-mode-hook #'lsp)
+;;   ;; (add-hook 'js-mode-hook #'lsp)
+;;   (add-hook 'js-mode-hook #'prettier-js-mode)
+;;   (add-hook 'mmm-mode-hook
+;; 	    (lambda ()
+;; 	      (set-face-background 'mmm-default-submode-face nil))))
