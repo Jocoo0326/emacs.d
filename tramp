@@ -1,0 +1,10 @@
+;; -*- emacs-lisp -*- <23/12/12 16:11:27 ~/.emacs.d/tramp>
+;; Tramp connection history.  Don't change this file.
+;; Run `M-x tramp-cleanup-all-connections' instead.
+
+(((tramp-file-name "cache" nil nil nil nil nil nil)
+  ("tramp-version" "2.6.0.29.1"))
+ ((tramp-file-name "mtp" nil nil "Redmi_Note_11T_Pro" nil nil nil)
+  ("activation-uri" "mtp://Xiaomi_Redmi_Note_11T_Pro_ONSGGU5TRKHUZHPV/")
+  ("media-device"
+   (tramp-media-device "mtp" "Xiaomi_Redmi_Note_11T_Pro_ONSGGU5TRKHUZHPV" nil))))

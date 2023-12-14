@@ -99,16 +99,16 @@
          ("C-x b" . 'helm-buffers-list)
 	 ("C-c C-r" . 'helm-recentf))
   :config
-  (use-package helm-gtags
-    :init
-    (setenv "GTAGSLIBPATH" "/usr/include")
-    :ensure t
-    :bind (("C-]" . 'helm-gtags-dwim)
-           ("C-o" . 'helm-gtags-pop-stack)
-           ("C-<f12>" . 'helm-semantic-or-imenu))
-    :hook (
-           ;;(c-mode . helm-gtags-mode)
-           (c-mode . linum-mode)))
+  ;; (use-package helm-gtags
+  ;;   :init
+  ;;   (setenv "GTAGSLIBPATH" "/usr/include")
+  ;;   :ensure t
+  ;;   :bind (("C-]" . 'helm-gtags-dwim)
+  ;;          ("C-o" . 'helm-gtags-pop-stack)
+  ;;          ("C-<f12>" . 'helm-semantic-or-imenu))
+  ;;   :hook (
+  ;;          ;;(c-mode . helm-gtags-mode)
+  ;;          (c-mode . linum-mode)))
   (use-package helm-etags-plus
     :ensure t
     :bind (("C-]" . 'helm-etags-plus-select)
@@ -138,7 +138,7 @@
 
 (add-hook 'prog-mode-hook
 	  (lambda ()
-	    (linum-mode t)
+	    (display-line-numbers-mode t)
 	    (eldoc-mode t)
 	    (setq show-trailing-whitespace t)))
 
@@ -215,15 +215,15 @@
 	    (local-set-key (kbd "C-c \\") 'clang-format-buffer)
 	    (clang-format+-mode 1)))
 
-(use-package cider
-  :ensure t
-  :config
-  (setq cider-repl-display-help-banner nil)
-  (use-package clj-refactor
-    :ensure t
-    :config
-    (cljr-add-keybindings-with-prefix "C-c C-m"))
-  :hook (clojure-mode . clj-refactor-mode))
+;; (use-package cider
+;;   :ensure t
+;;   :config
+;;   (setq cider-repl-display-help-banner nil)
+;;   (use-package clj-refactor
+;;     :ensure t
+;;     :config
+;;     (cljr-add-keybindings-with-prefix "C-c C-m"))
+;;   :hook (clojure-mode . clj-refactor-mode))
 
 (add-hook 'clojure-mode-hook
 	  (lambda ()
@@ -244,8 +244,8 @@
 
 (use-package emmet-mode
   :ensure t)
-(use-package format-all
-  :ensure t)
+;; (use-package format-all
+;;   :ensure t)
 (use-package impatient-mode
   :ensure t)
 (add-hook 'sgml-mode-hook
@@ -303,3 +303,6 @@
 ;;   (add-hook 'mmm-mode-hook
 ;; 	    (lambda ()
 ;; 	      (set-face-background 'mmm-default-submode-face nil))))
+
+(use-package go-mode
+  :ensure t)
