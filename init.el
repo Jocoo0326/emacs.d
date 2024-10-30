@@ -1,1 +1,1 @@
-init-short.el
+init-mini.el
