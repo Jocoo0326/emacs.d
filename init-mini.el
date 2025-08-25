@@ -47,6 +47,7 @@
 (load-theme 'jocoo-material t)
 
 ;; multiple cursors
+(jocoo/use-package 'multipule-cursors)
 (global-set-key (kbd "C-S-c C-S-c") 'mc/mark-lines)
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
