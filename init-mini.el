@@ -78,25 +78,12 @@
 (jocoo/use-package 'magit)
 (global-set-key (kbd "C-x g") 'magit-status)
 
-(global-set-key (kbd "S-<left>") (lambda ()
-				                           (interactive)
-				                           (let ((window (window-in-direction 'left)))
-				                             (and window (select-window window)))))
-
-(global-set-key (kbd "S-<right>") (lambda ()
-				                            (interactive)
-				                            (let ((window (window-in-direction 'right)))
-				                              (and window (select-window window)))))
-
-(global-set-key (kbd "S-<up>") (lambda ()
-				                         (interactive)
-				                         (let ((window (window-in-direction 'up)))
-				                           (and window (select-window window)))))
-
-(global-set-key (kbd "S-<down>") (lambda ()
-				                           (interactive)
-				                           (let ((window (window-in-direction 'below)))
-				                             (and window (select-window window)))))
+(mapc (lambda (b) (global-set-key (kbd (car b))
+                                  `(lambda () (interactive)
+                                     (when-let ((w (window-in-direction ',(cdr b))))
+                                       (select-window w)))))
+      '(("S-<left>" . left) ("S-<right>" . right)
+        ("S-<up>" . up) ("S-<down>" . down)))
 
 ;; restclient
 (jocoo/use-package 'restclient)
