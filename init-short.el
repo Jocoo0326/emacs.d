@@ -304,5 +304,5 @@
 ;; 	    (lambda ()
 ;; 	      (set-face-background 'mmm-default-submode-face nil))))
 
-(use-package go-mode
-  :ensure t)
+;;(use-package go-mode
+;;  :ensure t)
