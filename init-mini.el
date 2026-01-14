@@ -16,7 +16,7 @@
 
 ;; custom use package
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("melpa" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/") t)
 (package-initialize)
 (defmacro -> (&rest BODY)
   "thread first"
@@ -86,8 +86,8 @@
         ("S-<up>" . up) ("S-<down>" . down)))
 
 ;; restclient
-(jocoo/use-package 'restclient)
-(add-to-list 'auto-mode-alist '("\\.rest\\'" . restclient-mode))
+;; (jocoo/use-package 'restclient)
+;; (add-to-list 'auto-mode-alist '("\\.rest\\'" . restclient-mode))
 
 (jocoo/use-package 'realgud)
 (setq realgud:gdb-command-name "gdb --fullname")
