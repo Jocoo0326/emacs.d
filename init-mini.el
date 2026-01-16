@@ -87,7 +87,8 @@
 
 ;; restclient
 ;; (jocoo/use-package 'restclient)
-;; (add-to-list 'auto-mode-alist '("\\.rest\\'" . restclient-mode))
+(load-file (expand-file-name "lisp/restclient.el" user-emacs-directory))
+(add-to-list 'auto-mode-alist '("\\.rest\\'" . restclient-mode))
 
 (jocoo/use-package 'realgud)
 (setq realgud:gdb-command-name "gdb --fullname")

@@ -327,18 +327,6 @@ Stored as an alist of name -> (hook-creation-func . description)")
 (defconst restclient-content-type-regexp
   "^Content-[Tt]ype: \\(\\w+\\)/\\(?:[^\\+\r\n]*\\+\\)*\\([^;\r\n]+\\)")
 
-(defconst restclient-multipart-begin "^@multipart\\s-*$")
-(defconst restclient-multipart-end "^@end\\s-*$")
-
-(defconst restclient-multipart-field-regexp
-  "^field\\s-+\\([^= ]+\\)\\s-*=\\s-*\\(.+\\)$")
-
-(defconst restclient-multipart-file-regexp
-  "^file\\s-+\\([^= ]+\\)\\s-*=\\s-*\\([^: ]+\\)\\(?:\\s-*:\\s-*\\(.+\\)\\)?$")
-
-(defconst restclient-multipart-json-regexp
-  "^json\\s-+\\([^= ]+\\)\\s-*=\\s-*\\(.+\\)$")
-
 (defconst restclient-response-hook-regexp
   "^\\(->\\) \\([^[:space:]]+\\) +\\(.*\\)$")
 
@@ -373,37 +361,6 @@ Workaround for Emacs bug#61916"
   `(when (and (hash-table-contains-p ',var restclient--globals-stack)
               (< 0 (length (gethash ',var restclient--globals-stack))))
      (setq-default ,var (pop (gethash ',var restclient--globals-stack)))))
-
-(defun restclient-parse-multipart-dsl (text)
-  (let ((lines (split-string text "\n"))
-        (parts '()))
-    (dolist (line lines)
-      (cond
-       ((string-match restclient-multipart-field-regexp line)
-        (push (list
-               (match-string 1 line)
-               (match-string 2 line))
-              parts))
-
-       ((string-match restclient-multipart-file-regexp line)
-        (let ((name (match-string 1 line))
-              (path (match-string 2 line))
-              (ctype (match-string 3 line)))
-          (push
-           (list name
-                 (restclient-read-file path)
-                 (file-name-nondirectory path)
-                 (or ctype "application/octet-stream"))
-           parts)))
-
-       ((string-match restclient-multipart-json-regexp line)
-        (push
-         (list (match-string 1 line)
-               (match-string 2 line)
-               nil
-               "application/json")
-         parts))))
-    (nreverse parts)))
 
 (defun restclient--multipart-part (name value boundary)
   (let ((eol "\r\n"))
@@ -441,21 +398,6 @@ Workaround for Emacs bug#61916"
               parts)
       (list (concat "--" boundary "--" eol)))
      "")))
-
-
-(defun restclient-parse-body-with-multipart (entity vars)
-  (if (string-match restclient-multipart-begin entity)
-      (let* ((body (replace-regexp-in-string
-                    (concat restclient-multipart-begin "\\|"
-                            restclient-multipart-end)
-                    ""
-                    entity))
-             (parts (restclient-parse-multipart-dsl body))
-             (boundary (format "----restclient-%x" (random))))
-        (cons
-         boundary
-         (restclient-build-multipart parts boundary)))
-    (restclient-parse-body entity vars)))
 
 (defun restclient-http-do (method url headers entity &rest handle-args)
   "Send ENTITY and HEADERS to URL as a METHOD request."
